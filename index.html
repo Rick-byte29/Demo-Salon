@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Aurelle Hair &amp; Beauty Atelier</title>
+<meta name="description" content="Aurelle is a hair and beauty atelier for colour, cutting, bridal styling and skin. Book your consultation on WhatsApp.">
+<meta name="theme-color" content="#2B1830">
+<script>document.documentElement.classList.add('js');</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,600;1,6..96,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+@property --h1{syntax:'<color>';inherits:true;initial-value:#2a1a14}
+@property --h2{syntax:'<color>';inherits:true;initial-value:#4a2d22}
+@property --skin{syntax:'<color>';inherits:true;initial-value:#e2b48f}
+
+:root{
+  --bg:#FBF5F3; --bg2:#F3E6E4; --ink:#2B1830; --muted:#6E5A70;
+  --accent:#8A2F5D; --accent-ink:#ffffff; --brass:#B98B4E;
+  --card:#ffffff; --line:rgba(43,24,48,.14);
+  --serif:'Bodoni Moda','Bodoni 72',Didot,'Times New Roman',serif;
+  --sans:'Jost',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#1B0F20; --bg2:#25152B; --ink:#F6EAEA; --muted:#BBA5BD;
+    --accent:#E38BB3; --accent-ink:#1B0F20; --brass:#D2A76A;
+    --card:#2B1A32; --line:rgba(246,234,234,.16);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#1B0F20; --bg2:#25152B; --ink:#F6EAEA; --muted:#BBA5BD;
+  --accent:#E38BB3; --accent-ink:#1B0F20; --brass:#D2A76A;
+  --card:#2B1A32; --line:rgba(246,234,234,.16);
+}
+html{scroll-behavior:smooth;scroll-padding-top:calc(env(safe-area-inset-top,0px) + 70px);background:var(--bg)}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 17px/1.65 var(--sans);overflow-x:clip;-webkit-font-smoothing:antialiased}
+img,svg{max-width:100%}
+a{color:inherit}
+h1,h2,h3,h4{font-family:var(--serif);font-weight:400;line-height:1.06;letter-spacing:-.012em;margin:0}
+h2{font-size:clamp(34px,5.4vw,70px)}
+h3{font-size:clamp(22px,2.4vw,30px)}
+p{margin:0;max-width:62ch}
+.wrap{width:min(1180px,100% - 40px);margin-inline:auto}
+.sec{padding:clamp(76px,10vw,144px) 0;position:relative}
+.alt{background:var(--bg2)}
+.muted{color:var(--muted)}
+.dk{--bg:#2B1830;--ink:#F6EAEA;--muted:#CDB8CF;--accent:#E38BB3;--accent-ink:#2B1830;--brass:#D2A76A;--card:rgba(255,255,255,.06);--line:rgba(246,234,234,.18);background:var(--bg);color:var(--ink)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:6px}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:15px 28px;border-radius:999px;background:var(--accent);color:var(--accent-ink);font:500 16px/1 var(--sans);text-decoration:none;border:1px solid var(--accent);cursor:pointer;transition:transform .25s ease,box-shadow .25s ease,background .25s ease}
+.btn:hover{transform:translateY(-2px);box-shadow:0 12px 30px -12px var(--accent)}
+.btn.ghost{background:transparent;color:var(--ink);border-color:var(--line)}
+.btn.ghost:hover{border-color:var(--ink);box-shadow:none}
+.btn.sm{padding:11px 20px;font-size:15px}
+.btn svg{width:20px;height:20px;fill:currentColor}
+
+/* progress + nav */
+.progress{position:fixed;left:0;right:0;top:0;height:3px;z-index:80;transform-origin:0 50%;transform:scaleX(0);background:linear-gradient(90deg,var(--brass),var(--accent))}
+.nav{position:fixed;top:0;left:0;right:0;z-index:70;padding:calc(env(safe-area-inset-top,0px) + 14px) 0 14px;transition:background .35s ease,color .35s ease,box-shadow .35s ease,padding .35s ease;color:#F6EAEA}
+.nav.solid{background:color-mix(in srgb,var(--bg) 88%,transparent);color:var(--ink);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:0 1px 0 var(--line)}
+.nav .wrap{display:flex;align-items:center;justify-content:space-between;gap:20px}
+.logo{font-family:var(--serif);font-size:28px;text-decoration:none;letter-spacing:.01em;display:flex;align-items:center;gap:10px}
+.logo svg{width:26px;height:26px}
+.links{display:flex;gap:30px;align-items:center}
+.links a{text-decoration:none;font-size:15.5px;position:relative;padding:4px 0}
+.links a::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:currentColor;transform:scaleX(0);transform-origin:0 50%;transition:transform .3s ease}
+.links a:hover::after{transform:scaleX(1)}
+.nav-right{display:flex;align-items:center;gap:12px}
+.burger{display:none;width:44px;height:44px;border-radius:50%;border:1px solid currentColor;background:transparent;color:inherit;cursor:pointer;position:relative}
+.burger span{position:absolute;left:13px;right:13px;height:1.5px;background:currentColor;transition:transform .3s ease,top .3s ease}
+.burger span:nth-child(1){top:18px}.burger span:nth-child(2){top:25px}
+.burger[aria-expanded="true"] span:nth-child(1){top:21px;transform:rotate(45deg)}
+.burger[aria-expanded="true"] span:nth-child(2){top:21px;transform:rotate(-45deg)}
+.sheet{position:fixed;inset:0;z-index:65;background:#2B1830;color:#F6EAEA;display:flex;flex-direction:column;justify-content:center;padding:100px 28px 40px;transform:translateY(-100%);transition:transform .6s cubic-bezier(.7,0,.2,1);visibility:hidden}
+.sheet.open{transform:none;visibility:visible}
+.sheet a.big{font-family:var(--serif);font-size:clamp(34px,10vw,54px);text-decoration:none;padding:8px 0;border-bottom:1px solid rgba(246,234,234,.14)}
+.sheet .btn{margin-top:28px;align-self:flex-start;background:#E38BB3;color:#2B1830;border-color:#E38BB3}
+
+/* hero */
+.hero{min-height:100vh;min-height:100svh;display:flex;align-items:center;overflow:hidden;padding:140px 0 90px;position:relative;isolation:isolate}
+.hero::before{content:"";position:absolute;inset:0;z-index:-2;background:radial-gradient(900px 600px at 78% 30%,rgba(138,47,93,.55),transparent 65%),radial-gradient(700px 500px at 10% 100%,rgba(185,139,78,.22),transparent 60%),#2B1830}
+.strands{position:absolute;inset:-6% -4%;width:108%;height:112%;z-index:-1;will-change:transform}
+.strands path{fill:none;stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset 2.8s cubic-bezier(.3,.6,.2,1)}
+.strands.drawn path{stroke-dashoffset:0}
+.strands g.sway{animation:sway 14s ease-in-out infinite alternate;transform-origin:50% 50%}
+@keyframes sway{from{transform:translate3d(0,0,0) rotate(0)}to{transform:translate3d(-14px,10px,0) rotate(.6deg)}}
+.hero h1{font-size:clamp(46px,9.4vw,138px);max-width:12.5em;line-height:.98}
+.hero h1 em{font-style:italic;color:#F3D3C9}
+.hero .lead{margin-top:30px;font-size:clamp(17px,1.6vw,21px);color:#E6D3E4;max-width:46ch}
+.cta{display:flex;flex-wrap:wrap;gap:14px;margin-top:38px}
+.hero .btn.ghost{color:#F6EAEA;border-color:rgba(246,234,234,.35)}
+.proof{display:flex;align-items:center;gap:14px;margin-top:44px;font-size:15px;color:#DCC7DB}
+.stars{display:inline-flex;gap:3px}
+.stars svg{width:16px;height:16px;fill:var(--brass)}
+.cue{position:absolute;left:50%;bottom:22px;width:1px;height:54px;background:linear-gradient(#F6EAEA,transparent);opacity:.6;animation:cue 2.4s ease-in-out infinite}
+@keyframes cue{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+
+/* marquee */
+.band{background:var(--brass);color:#2B1830;overflow:hidden;padding:16px 0;white-space:nowrap}
+.band-track{display:inline-flex;gap:34px;animation:roll 38s linear infinite;padding-left:34px}
+.band span{font-family:var(--serif);font-size:clamp(20px,2.4vw,28px);display:inline-flex;align-items:center;gap:34px;font-style:italic}
+.band svg{width:12px;height:12px;fill:#2B1830;flex:none}
+@keyframes roll{to{transform:translateX(-50%)}}
+
+/* about */
+.about{display:grid;grid-template-columns:1.15fr .85fr;gap:clamp(36px,7vw,110px);align-items:start}
+.about h2{margin-bottom:30px}
+.about p+p{margin-top:18px}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:0;border-top:1px solid var(--line)}
+.stat{padding:30px 0;border-bottom:1px solid var(--line)}
+.stat:nth-child(odd){padding-right:20px;border-right:1px solid var(--line)}
+.stat:nth-child(even){padding-left:28px}
+.stat b{display:block;font:400 clamp(42px,5vw,68px)/1 var(--serif);color:var(--accent)}
+.stat span{font-size:15px;color:var(--muted)}
+.values{margin-top:40px;display:grid;gap:22px}
+.values div{padding-left:22px;border-left:2px solid var(--brass)}
+.values h4{font-size:22px;margin-bottom:4px}
+.values p{font-size:16px;color:var(--muted)}
+
+/* services */
+.head{display:flex;justify-content:space-between;align-items:end;gap:30px;flex-wrap:wrap;margin-bottom:48px}
+.head p{max-width:44ch;color:var(--muted)}
+.tabs{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:30px}
+.tab{padding:12px 22px;border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--ink);font:400 16px/1 var(--sans);cursor:pointer;transition:background .25s,color .25s,border-color .25s}
+.tab:hover{border-color:var(--ink)}
+.tab[aria-selected="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.rows{border-top:1px solid var(--line)}
+.row{display:grid;grid-template-columns:1fr auto;gap:8px 30px;padding:24px 8px;border-bottom:1px solid var(--line);align-items:baseline;transition:background .3s ease,padding .3s ease;animation:rowin .6s cubic-bezier(.2,.7,.1,1) both;animation-delay:calc(var(--i)*60ms)}
+.row:hover{background:color-mix(in srgb,var(--accent) 7%,transparent);padding-left:20px}
+@keyframes rowin{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.row h3{font-size:clamp(22px,2.6vw,32px)}
+.row p{grid-column:1;font-size:16px;color:var(--muted)}
+.row .meta{grid-column:2;grid-row:1 / span 2;text-align:right;align-self:center}
+.row .price{font:400 clamp(22px,2.4vw,30px)/1 var(--serif);display:block;color:var(--accent)}
+.row .dur{font-size:14px;color:var(--muted)}
+.fine{margin-top:22px;font-size:14.5px;color:var(--muted)}
+
+/* shade studio */
+.studio{display:grid;grid-template-columns:.9fr 1.1fr;gap:clamp(30px,6vw,100px);align-items:center}
+.stage{position:relative;aspect-ratio:400/480;max-width:460px;width:100%;margin-inline:auto;border-radius:200px 200px 24px 24px;overflow:hidden;background:radial-gradient(circle at 50% 30%,rgba(255,255,255,.14),transparent 62%),linear-gradient(180deg,#3B2342,#22122A);box-shadow:inset 0 0 0 1px rgba(246,234,234,.14)}
+.stage svg{width:100%;height:100%;display:block}
+.stage .hair{fill:url(#hg)}
+.studio-ui h2{margin-bottom:20px}
+.studio-ui .sub{color:var(--muted);margin-bottom:28px}
+.swatches{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:26px}
+.sw{aspect-ratio:1;border-radius:50%;border:2px solid transparent;cursor:pointer;padding:0;position:relative;background:linear-gradient(135deg,var(--a),var(--b));box-shadow:0 0 0 1px var(--line);transition:transform .25s ease,box-shadow .25s ease}
+.sw:hover{transform:scale(1.06)}
+.sw[aria-pressed="true"]{box-shadow:0 0 0 3px var(--bg),0 0 0 5px var(--accent);transform:scale(1.04)}
+.shade-name{font-family:var(--serif);font-size:clamp(30px,3.6vw,46px);margin-bottom:6px;min-height:1.1em}
+.shade-desc{color:var(--muted);min-height:3.4em;margin-bottom:22px}
+.skins{display:flex;align-items:center;gap:10px;margin-bottom:28px;font-size:15px;color:var(--muted);flex-wrap:wrap}
+.skin{width:28px;height:28px;border-radius:50%;border:0;cursor:pointer;background:var(--c);box-shadow:0 0 0 1px var(--line)}
+.skin[aria-pressed="true"]{box-shadow:0 0 0 2px var(--bg),0 0 0 4px var(--accent)}
+
+/* rituals */
+.rituals{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;align-items:stretch}
+.ritual{background:var(--card);border:1px solid var(--line);border-radius:26px;padding:36px 32px;display:flex;flex-direction:column;gap:18px;transition:transform .4s ease}
+.ritual:hover{transform:translateY(-6px)}
+.ritual.feat{background:var(--ink);color:var(--bg);border-color:var(--ink);padding-block:50px;margin-block:-14px}
+.ritual .tag{font-size:14px;color:var(--brass)}
+.ritual .cost{font:400 44px/1 var(--serif)}
+.ritual .cost small{font:400 15px var(--sans);opacity:.7;margin-left:6px}
+.ritual ul{list-style:none;padding:0;margin:0;display:grid;gap:10px;font-size:16px;flex:1}
+.ritual li{display:flex;gap:12px;align-items:flex-start}
+.ritual li::before{content:"";flex:none;width:14px;height:8px;margin-top:9px;border-left:1.5px solid var(--brass);border-bottom:1.5px solid var(--brass);transform:rotate(-45deg) scale(.9)}
+.ritual.feat .btn{background:var(--bg);color:var(--ink);border-color:var(--bg)}
+
+/* process */
+.process{display:grid;grid-template-columns:.8fr 1.2fr;gap:clamp(30px,6vw,100px)}
+.process .stick{position:sticky;top:120px;align-self:start}
+.process .stick p{margin-top:22px;color:var(--muted)}
+.steps{position:relative;padding-left:64px;display:grid;gap:56px}
+.steps::before,.steps::after{content:"";position:absolute;left:21px;top:8px;bottom:8px;width:2px;background:var(--line)}
+.steps::after{background:linear-gradient(var(--brass),var(--accent));transform-origin:top;transform:scaleY(var(--p,0));transition:transform .15s linear}
+.step{position:relative}
+.step .n{position:absolute;left:-64px;top:-2px;width:44px;height:44px;border-radius:50%;background:var(--bg2);border:1px solid var(--line);display:grid;place-items:center;font:400 20px/1 var(--serif);transition:background .4s,color .4s,border-color .4s}
+.step.in .n{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.step h3{margin-bottom:10px}
+.step p{color:var(--muted)}
+.step .time{display:inline-block;margin-top:12px;font-size:14px;color:var(--brass)}
+
+/* team */
+.team{display:grid;grid-template-columns:repeat(4,1fr);gap:22px}
+.member .pic{aspect-ratio:3/4;border-radius:180px 180px 18px 18px;position:relative;overflow:hidden;display:grid;place-items:center;transition:border-radius .6s ease}
+.member:hover .pic{border-radius:22px}
+.member .pic b{font:400 clamp(90px,10vw,150px)/1 var(--serif);color:rgba(255,255,255,.9);mix-blend-mode:overlay}
+.member h3{margin-top:18px;font-size:26px}
+.member p{font-size:15.5px;color:var(--muted)}
+.member .role{color:var(--brass);font-size:15px;margin-bottom:6px}
+
+/* testimonials */
+.tm-head{display:flex;justify-content:space-between;align-items:end;gap:24px;flex-wrap:wrap;margin-bottom:44px}
+.score{display:flex;align-items:center;gap:18px}
+.score big{font:400 64px/1 var(--serif)}
+.score small{display:block;color:var(--muted);font-size:14.5px}
+.tm-ctl{display:flex;gap:10px}
+.circle{width:52px;height:52px;border-radius:50%;border:1px solid var(--line);background:transparent;color:var(--ink);cursor:pointer;display:grid;place-items:center;transition:background .25s,color .25s}
+.circle:hover{background:var(--ink);color:var(--bg)}
+.circle svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.6}
+.track{--g:calc((100vw - min(1180px,100vw - 40px))/2);display:flex;gap:22px;overflow-x:auto;scroll-snap-type:x mandatory;padding:6px var(--g) 24px;scroll-padding-inline:var(--g);scrollbar-width:none;margin-inline:calc(var(--g)*-1)}
+.track::-webkit-scrollbar{display:none}
+.quote{margin:0;flex:0 0 min(420px,84vw);scroll-snap-align:center;background:var(--card);border:1px solid var(--line);border-radius:26px;padding:34px 30px;display:flex;flex-direction:column;gap:20px;min-height:340px}
+.quote:nth-child(even){margin-top:34px}
+.quote blockquote{margin:0;font:400 clamp(19px,1.9vw,23px)/1.45 var(--serif);flex:1}
+.who{display:flex;align-items:center;gap:14px}
+.av{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,var(--brass),var(--accent));color:#2B1830;font:500 16px var(--sans)}
+.who b{display:block;font-weight:500;font-size:16px}
+.who span{font-size:14px;color:var(--muted)}
+
+/* offer */
+.offer{background:linear-gradient(120deg,#8A2F5D,#5B1D40);color:#FFF3F0;padding:clamp(52px,7vw,90px) 0;position:relative;overflow:hidden}
+.offer .wrap{display:flex;justify-content:space-between;align-items:center;gap:34px;flex-wrap:wrap}
+.offer h2{font-size:clamp(30px,4.4vw,56px);max-width:16em}
+.offer .btn{background:#FFF3F0;color:#5B1D40;border-color:#FFF3F0}
+.offer::before{content:"";position:absolute;right:-120px;top:-120px;width:420px;height:420px;border-radius:50%;border:1px solid rgba(255,243,240,.25);box-shadow:0 0 0 60px rgba(255,243,240,.05),0 0 0 120px rgba(255,243,240,.04)}
+
+/* faq */
+.faq{display:grid;grid-template-columns:.8fr 1.2fr;gap:clamp(30px,6vw,100px)}
+details{border-bottom:1px solid var(--line)}
+details:first-of-type{border-top:1px solid var(--line)}
+summary{list-style:none;cursor:pointer;padding:26px 0;font:400 clamp(20px,2.2vw,27px)/1.25 var(--serif);display:flex;justify-content:space-between;gap:20px;align-items:center}
+summary::-webkit-details-marker{display:none}
+summary i{flex:none;width:28px;height:28px;border-radius:50%;border:1px solid var(--line);position:relative;transition:transform .35s ease,background .3s}
+summary i::before,summary i::after{content:"";position:absolute;left:8px;right:8px;top:13px;height:1.5px;background:currentColor}
+summary i::after{transform:rotate(90deg);transition:transform .35s ease}
+details[open] summary i{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+details[open] summary i::after{transform:rotate(0)}
+details p{padding:0 0 26px;color:var(--muted);animation:rowin .5s ease both}
+
+/* booking */
+.book{display:grid;grid-template-columns:1fr 1fr;gap:clamp(30px,6vw,90px);align-items:start}
+.book form{background:var(--card);border:1px solid var(--line);border-radius:28px;padding:clamp(26px,4vw,44px);display:grid;gap:18px}
+.field{display:grid;gap:8px}
+.field label{font-size:15px;color:var(--muted)}
+.field input,.field select,.field textarea{width:100%;padding:15px 16px;border-radius:14px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font:400 16px var(--sans);appearance:none}
+.field textarea{min-height:96px;resize:vertical}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.book form .btn{width:100%;padding:18px;font-size:17px}
+.book .note{font-size:14px;color:var(--muted);text-align:center;max-width:none}
+.info h2{margin-bottom:26px}
+.info dl{margin:32px 0 0;display:grid;gap:0}
+.info dl div{display:grid;grid-template-columns:130px 1fr;gap:16px;padding:18px 0;border-top:1px solid var(--line)}
+.info dt{color:var(--brass);font-size:15px}
+.info dd{margin:0}
+.map{margin-top:28px;border-radius:24px;overflow:hidden;border:1px solid var(--line);aspect-ratio:16/9;background:var(--bg2)}
+.map svg{width:100%;height:100%;display:block}
+
+/* footer */
+footer{padding:70px 0 40px}
+.foot{display:flex;justify-content:space-between;gap:40px;flex-wrap:wrap;padding-bottom:44px;border-bottom:1px solid var(--line)}
+.foot .logo{font-size:40px}
+.foot p{margin-top:14px;color:var(--muted);max-width:32ch}
+.foot nav{display:flex;flex-direction:column;gap:10px}
+.foot nav a{text-decoration:none;color:var(--muted)}
+.foot nav a:hover{color:var(--ink)}
+.legal{display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap;padding-top:26px;font-size:14px;color:var(--muted)}
+
+/* whatsapp sticky */
+.wa{position:fixed;right:18px;bottom:calc(18px + env(safe-area-inset-bottom,0px));z-index:90;display:flex;align-items:center;gap:0;text-decoration:none;background:#25D366;color:#fff;border-radius:999px;box-shadow:0 12px 30px -8px rgba(37,211,102,.7),0 4px 12px rgba(0,0,0,.25);transition:transform .3s ease}
+.wa:hover{transform:translateY(-3px) scale(1.03)}
+.wa .ico{width:60px;height:60px;display:grid;place-items:center;position:relative}
+.wa .ico::before{content:"";position:absolute;inset:0;border-radius:50%;border:2px solid #25D366;animation:ping 2.4s ease-out infinite}
+.wa svg{width:32px;height:32px;fill:#fff}
+.wa .lbl{max-width:0;overflow:hidden;white-space:nowrap;font:500 16px var(--sans);transition:max-width .45s ease,padding .45s ease}
+.wa.open .lbl,.wa:hover .lbl,.wa:focus-visible .lbl{max-width:200px;padding-left:20px}
+@keyframes ping{0%{transform:scale(1);opacity:.8}80%,100%{transform:scale(1.7);opacity:0}}
+
+/* reveal system */
+.js .rv{opacity:0;transform:translateY(30px);transition:opacity .9s ease var(--d,0s),transform 1s cubic-bezier(.2,.7,.1,1) var(--d,0s)}
+.js .rv[data-rv="left"]{transform:translateX(-46px)}
+.js .rv[data-rv="right"]{transform:translateX(46px)}
+.js .rv[data-rv="scale"]{transform:scale(.92)}
+.js .rv.in{opacity:1;transform:none}
+.w{display:inline-block;overflow:hidden;vertical-align:top;padding-bottom:.14em;margin-bottom:-.14em}
+.js .w>span{display:inline-block;transform:translateY(108%);transition:transform 1s cubic-bezier(.2,.7,.1,1) calc(var(--i)*55ms + var(--d,0s))}
+.js .in .w>span,.js .w.in>span{transform:none}
+
+/* responsive */
+@media (max-width:980px){
+  .links{display:none}
+  .burger{display:block}
+  .about,.studio,.process,.faq,.book{grid-template-columns:1fr}
+  .process .stick{position:static}
+  .rituals{grid-template-columns:1fr}
+  .ritual.feat{margin-block:0}
+  .team{grid-template-columns:1fr 1fr}
+}
+@media (max-width:560px){
+  body{font-size:16.5px}
+  .nav .btn.sm{display:none}
+  .hero{padding-top:120px}
+  .cta .btn{flex:1 1 100%}
+  .row{grid-template-columns:1fr}
+  .row .meta{grid-column:1;grid-row:auto;text-align:left;display:flex;gap:12px;align-items:baseline}
+  .two{grid-template-columns:1fr}
+  .team{gap:14px}
+  .info dl div{grid-template-columns:1fr;gap:4px}
+  .swatches{gap:10px}
+  .quote:nth-child(even){margin-top:0}
+  .wa .ico{width:56px;height:56px}
+}
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+  .js .rv,.js .w>span{opacity:1!important;transform:none!important}
+  .strands path{stroke-dashoffset:0}
+}
+</style>
+</head>
+<body>
+
+<div class="progress" id="progress"></div>
+
+<header class="nav" id="nav">
+  <div class="wrap">
+    <a class="logo" href="#top" aria-label="Aurelle home">
+      <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M16 3c-6 5-6 11 0 15s6 8 0 11"/><path d="M10 6c-4 6-2 12 4 16s5 6 3 8" opacity=".6"/><path d="M22 6c4 6 2 12-4 16" opacity=".6"/></svg>
+      Aurelle
+    </a>
+    <nav class="links" aria-label="Primary">
+      <a href="#services">Services</a>
+      <a href="#studio">Shade studio</a>
+      <a href="#rituals">Rituals</a>
+      <a href="#team">Artists</a>
+      <a href="#reviews">Reviews</a>
+      <a href="#visit">Visit</a>
+    </nav>
+    <div class="nav-right">
+      <a class="btn sm" data-wa="Hi Aurelle, I'd like to book an appointment." href="#" target="_blank" rel="noopener">Book now</a>
+      <button class="burger" id="burger" aria-label="Open menu" aria-expanded="false" aria-controls="sheet"><span></span><span></span></button>
+    </div>
+  </div>
+</header>
+
+<div class="sheet" id="sheet" aria-hidden="true">
+  <a class="big" href="#services">Services</a>
+  <a class="big" href="#studio">Shade studio</a>
+  <a class="big" href="#rituals">Rituals</a>
+  <a class="big" href="#team">Artists</a>
+  <a class="big" href="#reviews">Reviews</a>
+  <a class="big" href="#visit">Visit</a>
+  <a class="btn" data-wa="Hi Aurelle, I'd like to book an appointment." href="#" target="_blank" rel="noopener">Book on WhatsApp</a>
+</div>
+
+<main>
+<!-- HERO -->
+<section class="hero dk" id="top">
+  <svg class="strands" id="strands" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <defs>
+      <linearGradient id="sg" x1="0" x2="1" y1="0" y2="0">
+        <stop offset="0" stop-color="#B98B4E"/><stop offset=".55" stop-color="#F3D3C9"/><stop offset="1" stop-color="#E38BB3"/>
+      </linearGradient>
+    </defs>
+    <g class="sway" id="strandG"></g>
+  </svg>
+  <div class="wrap">
+    <h1 data-split>Good hair is<br><em>a craft, not a rush.</em></h1>
+    <p class="lead rv" style="--d:.7s">Colour, cutting and bridal styling by artists who listen first. Book a consultation in under a minute on WhatsApp.</p>
+    <div class="cta rv" style="--d:.85s">
+      <a class="btn" data-wa="Hi Aurelle, I'd like to book a consultation." href="#" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><use href="#i-wa"/></svg>Book on WhatsApp</a>
+      <a class="btn ghost" href="#services">See services and prices</a>
+    </div>
+    <div class="proof rv" style="--d:1s">
+      <span class="stars" aria-hidden="true"></span>
+      <span>4.9 from 1,200+ guest reviews</span>
+    </div>
+  </div>
+  <span class="cue" aria-hidden="true"></span>
+</section>
+
+<!-- BAND -->
+<div class="band" aria-hidden="true">
+  <div class="band-track" id="bandTrack"></div>
+</div>
+
+<!-- ABOUT -->
+<section class="sec" id="about">
+  <div class="wrap about">
+    <div>
+      <h2 data-split>Twelve years of making people feel like themselves, only better.</h2>
+      <p class="rv">Aurelle started as a two-chair studio with one rule: no one leaves until they love it. Today we are nine artists, one quiet space, and a waiting list we are careful never to let grow too long.</p>
+      <p class="rv" style="--d:.1s">Every visit begins with a proper conversation about your hair, your routine and your week ahead. Then we get to work, unhurried.</p>
+      <div class="values">
+        <div class="rv" data-rv="left"><h4>Consultation before scissors</h4><p>Fifteen minutes, always included, never rushed.</p></div>
+        <div class="rv" data-rv="left" style="--d:.1s"><h4>Kind to your hair</h4><p>Professional colour lines, bond protection on every lightening service.</p></div>
+        <div class="rv" data-rv="left" style="--d:.2s"><h4>Honest advice</h4><p>If a look will not suit your hair, we will tell you and offer a better one.</p></div>
+      </div>
+    </div>
+    <div class="stats rv" data-rv="right">
+      <div class="stat"><b data-count="12" data-suffix="">0</b><span>years in practice</span></div>
+      <div class="stat"><b data-count="18000" data-suffix="+">0</b><span>guests styled</span></div>
+      <div class="stat"><b data-count="9" data-suffix="">0</b><span>senior artists</span></div>
+      <div class="stat"><b data-count="97" data-suffix="%">0</b><span>rebook within 8 weeks</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section class="sec alt" id="services">
+  <div class="wrap">
+    <div class="head">
+      <h2 data-split>Services and prices</h2>
+      <p class="rv">Transparent starting prices. Your artist confirms the exact quote after a short consultation.</p>
+    </div>
+    <div class="tabs rv" role="tablist" aria-label="Service categories" id="tabs"></div>
+    <div class="rows" id="rows" role="tabpanel" aria-live="polite"></div>
+    <p class="fine">Prices are starting prices and vary with hair length and density.</p>
+  </div>
+</section>
+
+<!-- SHADE STUDIO -->
+<section class="sec dk" id="studio">
+  <div class="wrap studio">
+    <div class="stage rv" data-rv="scale" id="stage" style="--h1:#2a1a14;--h2:#4a2d22;--skin:#e2b48f">
+      <svg viewBox="0 0 400 480" role="img" aria-label="Portrait showing the selected hair shade">
+        <defs>
+          <linearGradient id="hg" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" style="stop-color:var(--h1)"/>
+            <stop offset="1" style="stop-color:var(--h2)"/>
+          </linearGradient>
+          <linearGradient id="shine" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#fff" stop-opacity=".38"/><stop offset="1" stop-color="#fff" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
+        <path d="M40 480C52 418 122 386 200 386s148 32 160 94z" fill="#8A2F5D"/>
+        <path d="M168 310h64v86c-20 14-44 14-64 0z" style="fill:var(--skin)"/>
+        <path d="M168 335h64v20c-20 10-44 10-64 0z" fill="#000" opacity=".12"/>
+        <path class="hair" d="M124 228C100 300 96 385 76 452l78-6c-4-70 2-150-4-218z"/>
+        <path class="hair" d="M276 228c24 72 28 157 48 224l-78-6c4-70-2-150 4-218z"/>
+        <path class="hair" d="M116 238C90 108 148 58 200 58s110 50 84 180z"/>
+        <ellipse cx="200" cy="232" rx="80" ry="102" style="fill:var(--skin)"/>
+        <ellipse cx="172" cy="236" rx="7" ry="4" fill="#2B1830" opacity=".75"/>
+        <ellipse cx="228" cy="236" rx="7" ry="4" fill="#2B1830" opacity=".75"/>
+        <path d="M182 290q18 12 36 0" fill="none" stroke="#8A2F5D" stroke-width="3.5" stroke-linecap="round"/>
+        <path class="hair" d="M118 240C108 150 150 96 206 94c-40 24-58 66-62 126-6-18-16-16-26 20z"/>
+        <path class="hair" d="M282 240c10-90-32-144-88-146 36 24 58 64 64 126 6-18 16-16 24 20z"/>
+        <path d="M150 90c30-20 70-18 96 4" fill="none" stroke="url(#shine)" stroke-width="10" stroke-linecap="round" opacity=".8"/>
+        <path d="M104 320c-6 40-10 80-20 118" fill="none" stroke="url(#shine)" stroke-width="7" stroke-linecap="round" opacity=".55"/>
+      </svg>
+    </div>
+    <div class="studio-ui">
+      <h2 data-split>Try a shade before you book.</h2>
+      <p class="sub rv">Tap a colour to preview it. It is a guide only, your artist matches the exact tone to your skin and starting level.</p>
+      <div class="swatches rv" id="swatches" role="group" aria-label="Hair shades"></div>
+      <div class="shade-name" id="shadeName" aria-live="polite"></div>
+      <p class="shade-desc" id="shadeDesc"></p>
+      <div class="skins" id="skins" role="group" aria-label="Skin tone preview"><span>Skin tone</span></div>
+      <a class="btn" id="shadeBook" href="#" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><use href="#i-wa"/></svg>Ask for this shade</a>
+    </div>
+  </div>
+</section>
+
+<!-- RITUALS -->
+<section class="sec" id="rituals">
+  <div class="wrap">
+    <div class="head">
+      <h2 data-split>Rituals worth<br>the afternoon.</h2>
+      <p class="rv">Curated services bundled with the aftercare that keeps the result looking salon-fresh for weeks.</p>
+    </div>
+    <div class="rituals">
+      <article class="ritual rv">
+        <span class="tag">For a fresh start</span>
+        <h3>The Signature Reset</h3>
+        <div class="cost"><span data-price="2400"></span><small>from, 2 hrs</small></div>
+        <ul><li>Consultation and scalp check</li><li>Precision cut, tailored to your face</li><li>Cleansing wash ritual with massage</li><li>Blow-dry finish</li></ul>
+        <a class="btn ghost" data-wa="Hi Aurelle, I'd like to book The Signature Reset." href="#" target="_blank" rel="noopener">Book this ritual</a>
+      </article>
+      <article class="ritual feat rv" style="--d:.12s">
+        <span class="tag">Most booked</span>
+        <h3>The Colour Journey</h3>
+        <div class="cost"><span data-price="9800"></span><small>from, 4 hrs</small></div>
+        <ul><li>Custom balayage or global colour</li><li>Bond protection through the service</li><li>Gloss for shine and tone</li><li>Cut and finish</li><li>Take-home care kit</li></ul>
+        <a class="btn" data-wa="Hi Aurelle, I'd like to book The Colour Journey." href="#" target="_blank" rel="noopener">Book this ritual</a>
+      </article>
+      <article class="ritual rv" style="--d:.24s">
+        <span class="tag">For the big day</span>
+        <h3>The Bridal Morning</h3>
+        <div class="cost"><span data-price="24000"></span><small>from, full morning</small></div>
+        <ul><li>Trial session before the wedding</li><li>Bridal hair and makeup</li><li>Draping and dupatta setting</li><li>Touch-up kit for the day</li></ul>
+        <a class="btn ghost" data-wa="Hi Aurelle, I'd like to enquire about The Bridal Morning." href="#" target="_blank" rel="noopener">Enquire now</a>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section class="sec alt" id="process">
+  <div class="wrap process">
+    <div class="stick">
+      <h2 data-split>What a visit feels like.</h2>
+      <p class="rv">No surprises, no upselling. Here is how every appointment unfolds.</p>
+    </div>
+    <div class="steps" id="steps">
+      <div class="step rv"><span class="n">1</span><h3>We talk first</h3><p>Bring photos, bring questions. We look at your hair type, lifestyle and history, then agree on a plan and a price.</p><span class="time">15 minutes</span></div>
+      <div class="step rv"><span class="n">2</span><h3>The wash ritual</h3><p>A warm, slow shampoo with scalp massage, chosen for your hair's needs. Most guests say this is where the day melts away.</p><span class="time">20 minutes</span></div>
+      <div class="step rv"><span class="n">3</span><h3>The craft</h3><p>Cutting, colour or styling by your artist, with check-ins along the way so you see the result take shape.</p><span class="time">1 to 3 hours</span></div>
+      <div class="step rv"><span class="n">4</span><h3>The finish and the plan</h3><p>A finishing style, a walkthrough of how to recreate it at home, and a note of what to book next and when.</p><span class="time">20 minutes</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- TEAM -->
+<section class="sec" id="team">
+  <div class="wrap">
+    <div class="head">
+      <h2 data-split>Meet your artists.</h2>
+      <p class="rv">Every artist is trained in-house for at least a year before taking their own chair.</p>
+    </div>
+    <div class="team">
+      <article class="member rv"><div class="pic" style="background:linear-gradient(160deg,#8A2F5D,#2B1830)"><b>A</b></div><h3>Aarav Menon</h3><p class="role">Creative director</p><p>Precision cutting and lived-in blondes.</p></article>
+      <article class="member rv" style="--d:.1s"><div class="pic" style="background:linear-gradient(160deg,#B98B4E,#5B1D40)"><b>S</b></div><h3>Simran Kaur</h3><p class="role">Senior colourist</p><p>Balayage, copper and colour correction.</p></article>
+      <article class="member rv" style="--d:.2s"><div class="pic" style="background:linear-gradient(160deg,#5B3A78,#1B0F20)"><b>N</b></div><h3>Naina Rao</h3><p class="role">Bridal specialist</p><p>Bridal hair, makeup and draping.</p></article>
+      <article class="member rv" style="--d:.3s"><div class="pic" style="background:linear-gradient(160deg,#C9737F,#3B2342)"><b>K</b></div><h3>Karan Bhatt</h3><p class="role">Texture and treatments</p><p>Curls, smoothing and scalp health.</p></article>
+    </div>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section class="sec dk" id="reviews">
+  <div class="wrap">
+    <div class="tm-head">
+      <div>
+        <h2 data-split>Kind words from our guests.</h2>
+      </div>
+      <div class="score rv">
+        <big>4.9</big>
+        <div><span class="stars" aria-hidden="true"></span><small>1,200+ verified reviews</small></div>
+      </div>
+    </div>
+    <div class="track" id="track" tabindex="0" aria-label="Guest reviews"></div>
+    <div class="tm-ctl">
+      <button class="circle" id="prev" aria-label="Previous review"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+      <button class="circle" id="next" aria-label="Next review"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
+    </div>
+  </div>
+</section>
+
+<!-- OFFER -->
+<section class="offer">
+  <div class="wrap">
+    <h2 data-split>New here? Your first colour includes a gloss and a care kit.</h2>
+    <a class="btn rv" data-wa="Hi Aurelle, I'd like to claim the first-visit colour offer." href="#" target="_blank" rel="noopener">Claim the offer</a>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="sec" id="faq">
+  <div class="wrap faq">
+    <div>
+      <h2 data-split>Good to know.</h2>
+      <p class="rv muted" style="margin-top:22px">Can't find your answer? Message us on WhatsApp and we will reply within the hour during opening times.</p>
+    </div>
+    <div class="rv">
+      <details><summary>How do I book an appointment?<i></i></summary><p>Tap any Book button to message us on WhatsApp, or use the form below. Tell us the service and your preferred day and we will confirm a slot.</p></details>
+      <details><summary>Do I need a consultation before colour?<i></i></summary><p>Yes, and it is complimentary. For major colour changes we recommend a short consultation a few days before, so we can plan the right number of sessions.</p></details>
+      <details><summary>Will lightening damage my hair?<i></i></summary><p>Every lightening service includes bond protection, and your artist will tell you honestly if your hair needs a rest first.</p></details>
+      <details><summary>What is your cancellation policy?<i></i></summary><p>Please let us know at least 24 hours ahead so someone else can take your slot. Bridal bookings carry a small advance that is adjusted in the final bill.</p></details>
+      <details><summary>Do you offer bridal trials?<i></i></summary><p>Yes. The Bridal Morning includes a trial session so you can try looks with your artist weeks before the wedding.</p></details>
+      <details><summary>Which products do you use?<i></i></summary><p>We work with professional colour and care lines that are ammonia-light and formulated for long-term hair health. Ask and we will show you what is used on your hair.</p></details>
+    </div>
+  </div>
+</section>
+
+<!-- BOOKING -->
+<section class="sec alt" id="visit">
+  <div class="wrap book">
+    <form id="bookForm" class="rv" data-rv="left" novalidate>
+      <h3>Request your appointment</h3>
+      <div class="field"><label for="fn">Your name</label><input id="fn" name="name" autocomplete="name" placeholder="Full name" required></div>
+      <div class="field"><label for="fs">Service</label><select id="fs" name="service"></select></div>
+      <div class="two">
+        <div class="field"><label for="fd">Preferred date</label><input id="fd" name="date" type="date"></div>
+        <div class="field"><label for="ft">Time of day</label>
+          <select id="ft" name="time"><option>Morning</option><option>Afternoon</option><option>Evening</option></select>
+        </div>
+      </div>
+      <div class="field"><label for="fm">Anything we should know?</label><textarea id="fm" name="note" placeholder="Hair length, reference photos, allergies"></textarea></div>
+      <button class="btn" type="submit"><svg viewBox="0 0 24 24"><use href="#i-wa"/></svg>Send on WhatsApp</button>
+      <p class="note">This opens WhatsApp with your details filled in.</p>
+    </form>
+    <div class="info rv" data-rv="right">
+      <h2>Visit the atelier.</h2>
+      <p class="muted">A calm first-floor studio, five minutes from the main road, with parking and a small tea bar.</p>
+      <dl>
+        <div><dt>Address</dt><dd>24 Linden Row, Park Street<br>First floor, above the bookshop</dd></div>
+        <div><dt>Hours</dt><dd>Tuesday to Sunday, 10 am to 8 pm<br>Closed Mondays</dd></div>
+        <div><dt>WhatsApp</dt><dd><a href="#" data-wa="Hi Aurelle, I have a question." target="_blank" rel="noopener" id="phoneLink"></a></dd></div>
+      </dl>
+      <div class="map" aria-hidden="true">
+        <svg viewBox="0 0 640 360" preserveAspectRatio="xMidYMid slice">
+          <rect width="640" height="360" fill="currentColor" opacity="0"/>
+          <g fill="none" stroke="currentColor" stroke-opacity=".22" stroke-width="10" stroke-linecap="round"><path d="M-10 240C140 200 260 260 420 190S600 120 660 140"/><path d="M180 -10C200 100 160 220 230 370"/><path d="M420 -10C400 80 470 190 420 370"/></g>
+          <g fill="none" stroke="currentColor" stroke-opacity=".12" stroke-width="4"><path d="M-10 90L660 60"/><path d="M-10 320L660 300"/><path d="M90 -10L60 370"/><path d="M560 -10L540 370"/></g>
+          <g transform="translate(318 168)"><circle r="34" fill="#8A2F5D" opacity=".18"><animate attributeName="r" values="18;40;18" dur="3s" repeatCount="indefinite"/></circle><path d="M0 -30c-13 0-22 9-22 21 0 16 22 36 22 36s22-20 22-36c0-12-9-21-22-21z" fill="#8A2F5D"/><circle cy="-9" r="8" fill="#fff"/></g>
+        </svg>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="dk">
+  <div class="wrap">
+    <div class="foot">
+      <div>
+        <a class="logo" href="#top">Aurelle</a>
+        <p>Hair and beauty atelier. Colour, cut, bridal and skin.</p>
+      </div>
+      <nav aria-label="Footer"><a href="#services">Services</a><a href="#studio">Shade studio</a><a href="#rituals">Rituals</a><a href="#team">Artists</a></nav>
+      <nav aria-label="Footer more"><a href="#reviews">Reviews</a><a href="#faq">FAQ</a><a href="#visit">Book a visit</a></nav>
+    </div>
+    <div class="legal"><span>&copy; 2026 Aurelle Hair &amp; Beauty Atelier</span><span>Website concept by Your Studio Name</span></div>
+  </div>
+</footer>
+
+<!-- Sticky WhatsApp CTA -->
+<a class="wa" id="wa" data-wa="Hi Aurelle, I'd like to book an appointment." href="#" target="_blank" rel="noopener" aria-label="Chat on WhatsApp">
+  <span class="ico"><svg viewBox="0 0 24 24"><use href="#i-wa"/></svg></span>
+  <span class="lbl">Book on WhatsApp</span>
+</a>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-wa" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></symbol>
+  <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7L12 17.3 5.8 20.9l1.6-7L2 9.2l7.1-.6z"/></symbol>
+  <symbol id="i-dia" viewBox="0 0 12 12"><path d="M6 0l6 6-6 6-6-6z"/></symbol>
+</svg>
+
+<script>
+/* ============ EASY CUSTOMISATION ============ */
+const CONFIG = {
+  brand: "Aurelle",
+  phone: "919999999999",          // WhatsApp number, country code first, no + or spaces
+  phoneDisplay: "+91 99999 99999",
+  currency: "₹",
+  locale: "en-IN"
+};
+
+const SERVICES = {
+  "Hair": [
+    ["Signature cut and style","Consultation, wash ritual, precision cut and blow-dry","75 min",1500],
+    ["Blow-dry and styling","Smooth, waves or volume for any occasion","45 min",700],
+    ["Fringe and detail trim","Between-cut tidy-up, no wash needed","20 min",400],
+    ["Kids cut (under 12)","Gentle, patient and quick","30 min",600]
+  ],
+  "Colour": [
+    ["Root touch-up","Seamless coverage matched to your shade","90 min",2200],
+    ["Global colour","One rich, even tone from roots to ends","2 hrs",4500],
+    ["Balayage","Hand-painted, sun-kissed dimension, low maintenance","3 to 4 hrs",8500],
+    ["Foil highlights","Brighter, defined lift with toner","3 hrs",6500],
+    ["Gloss and tone","Refresh shine and cancel brassiness","40 min",1800]
+  ],
+  "Treatments": [
+    ["Keratin smoothing","Frizz control and shine for up to 4 months","3 hrs",7000],
+    ["Bond repair treatment","Rebuilds strength in chemically treated hair","45 min",3500],
+    ["Scalp detox spa","Deep cleanse and massage for a calm, healthy scalp","50 min",2200],
+    ["Nourishing hair spa","Deep moisture and steam for dry hair","60 min",1800]
+  ],
+  "Bridal": [
+    ["Bridal hair","Trial included, styled for photos that last all day","2 hrs",12000],
+    ["Bridal makeup","Long-wear, camera-ready, skin first","2 hrs",15000],
+    ["Engagement or sangeet look","Hair and makeup for pre-wedding events","2 hrs",8000],
+    ["Party styling","Updos, braids and waves for guests","60 min",2500]
+  ],
+  "Beauty": [
+    ["Classic manicure","Shape, cuticle care, polish","45 min",700],
+    ["Gel polish","Chip-free colour for up to three weeks","60 min",1200],
+    ["Signature glow facial","Cleanse, exfoliate, mask and massage","75 min",2800],
+    ["Pedicure","Soak, scrub, shape and polish","60 min",1100]
+  ]
+};
+
+const SHADES = [
+  {n:"Espresso",d:"Deep, glossy brown with a cool undertone. Timeless and low maintenance.",a:"#2a1a14",b:"#4a2d22"},
+  {n:"Chestnut",d:"Warm mid-brown with natural movement. Flatters almost every skin tone.",a:"#5a3320",b:"#8a5334"},
+  {n:"Honey blonde",d:"Soft golden dimension that catches the light. Hand-painted balayage works best.",a:"#c99a4b",b:"#ecc987"},
+  {n:"Copper",d:"Confident, glowing red-orange. A statement that looks rich in daylight.",a:"#9c4020",b:"#d9743a"},
+  {n:"Rosewood",d:"Muted burgundy with a rosy sheen. Romantic and quietly bold.",a:"#6d2a3f",b:"#a8506a"},
+  {n:"Ash platinum",d:"Cool, icy and luminous. Needs a gentle multi-step lift and bond care.",a:"#b9b6b8",b:"#ecebec"},
+  {n:"Plum",d:"Deep violet-brown that flashes colour in the sun. Great for dark bases.",a:"#3d1a4d",b:"#7a3a8c"},
+  {n:"Midnight blue",d:"Near-black with a blue glint. Subtle by day, striking at night.",a:"#0f1c3a",b:"#2c4a86"}
+];
+const SKINS = ["#f3d2b8","#e2b48f","#c58d64","#8d5a3b","#5b3a26"];
+
+const REVIEWS = [
+  ["Riya Sen","Balayage","I walked in with a screenshot and a lot of doubt. Simran explained exactly what would work on my dark hair, and three hours later I could not stop touching it. Every colleague has asked for her name."],
+  ["Ananya Bora","Bridal morning","Naina stayed calm while I was the opposite. My hair held through the pheras, the dancing and the humidity. The trial made all the difference, I knew exactly what to expect."],
+  ["Priya Malhotra","Signature cut","The wash ritual alone is worth the booking. Aarav actually asked how I style my hair each morning and cut for that, not for a photo. Easiest hair I have ever had."],
+  ["Neha D'Souza","Keratin smoothing","Monsoon frizz used to win every year. Three months in and my hair is still smooth and healthy, not stiff. Karan was honest about aftercare, which I appreciated."],
+  ["Sara Ahmed","Copper colour","I was scared of going bright. They mixed a custom copper that looks natural and bold at once. The salon is calm, spotless and nobody rushes you."],
+  ["Meera Kapoor","Colour correction","Another salon left me with orange patches. Aurelle fixed it over two sessions and never once made me feel silly. My hair feels stronger than before."]
+];
+
+const BAND = ["Precision cutting","Balayage","Bridal styling","Colour correction","Keratin smoothing","Scalp spa","Glow facials","Nail artistry"];
+
+/* ============ HELPERS ============ */
+const $ = (s, r=document) => r.querySelector(s);
+const $$ = (s, r=document) => [...r.querySelectorAll(s)];
+const money = n => CONFIG.currency + n.toLocaleString(CONFIG.locale);
+const waLink = t => "https://wa.me/" + CONFIG.phone + "?text=" + encodeURIComponent(t);
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const svgUse = id => `<svg viewBox="0 0 24 24" aria-hidden="true"><use href="#${id}"/></svg>`;
+
+/* WhatsApp links */
+function wireWA(){ $$("[data-wa]").forEach(a => a.href = waLink(a.dataset.wa)); }
+wireWA();
+$("#phoneLink").textContent = CONFIG.phoneDisplay;
+
+/* Stars */
+$$(".stars").forEach(s => s.innerHTML = svgUse("i-star").repeat(5));
+
+/* Split headings into words */
+function splitNode(node, counter){
+  [...node.childNodes].forEach(ch => {
+    if (ch.nodeType === 3){
+      const frag = document.createDocumentFragment();
+      ch.textContent.split(/(\s+)/).forEach(part => {
+        if (!part) return;
+        if (/^\s+$/.test(part)) { frag.appendChild(document.createTextNode(" ")); return; }
+        const w = document.createElement("span"); w.className = "w";
+        const i = document.createElement("span"); i.textContent = part; i.style.setProperty("--i", counter.n++);
+        w.appendChild(i); frag.appendChild(w);
+      });
+      ch.replaceWith(frag);
+    } else if (ch.nodeType === 1 && ch.tagName !== "BR"){ splitNode(ch, counter); }
+  });
+}
+$$("[data-split]").forEach(el => { el.setAttribute("aria-label", el.textContent.trim()); splitNode(el, {n:0}); });
+$$("[data-split] .w").forEach(w => w.setAttribute("aria-hidden","true"));
+
+/* Marquee */
+(function(){
+  const item = t => `<span>${t}${svgUse("i-dia")}</span>`;
+  const html = BAND.map(item).join("");
+  $("#bandTrack").innerHTML = html + html;
+})();
+
+/* Hero strands */
+(function(){
+  const g = $("#strandG"); let out = "";
+  for (let i=0;i<20;i++){
+    const y = 60 + i*42, a = (i%5)*34, w = (.5 + (i%4)*.35).toFixed(2), o = (.22 + ((i*37)%55)/100).toFixed(2);
+    const d = `M-140 ${y} C 260 ${y-280+a}, 640 ${y+320-a}, 1000 ${y-40} S 1440 ${y+170}, 1640 ${y-190+i*6}`;
+    out += `<path d="${d}" pathLength="1" stroke="url(#sg)" stroke-width="${w}" opacity="${o}" style="transition-delay:${(i*90)}ms"/>`;
+  }
+  g.innerHTML = out;
+  requestAnimationFrame(() => setTimeout(() => $("#strands").classList.add("drawn"), 120));
+})();
+
+/* Hero headline plays on load */
+window.addEventListener("load", () => setTimeout(() => $(".hero h1").classList.add("in"), 100));
+
+/* Services */
+(function(){
+  const tabs = $("#tabs"), rows = $("#rows"), sel = $("#fs");
+  const cats = Object.keys(SERVICES);
+  tabs.innerHTML = cats.map((c,i)=>`<button class="tab" role="tab" id="tab-${i}" aria-selected="${i===0}" data-c="${c}">${c}</button>`).join("");
+  function show(c){
+    rows.innerHTML = SERVICES[c].map((s,i)=>`
+      <div class="row" style="--i:${i}">
+        <h3>${s[0]}</h3>
+        <p>${s[1]}</p>
+        <div class="meta"><span class="price">${money(s[3])}</span><span class="dur">${s[2]}</span></div>
+      </div>`).join("");
+    $$(".tab").forEach(t => t.setAttribute("aria-selected", t.dataset.c===c));
+  }
+  tabs.addEventListener("click", e => { const b = e.target.closest(".tab"); if (b) show(b.dataset.c); });
+  show(cats[0]);
+  sel.innerHTML = `<option value="">Choose a service</option>` + cats.map(c => `<optgroup label="${c}">` + SERVICES[c].map(s=>`<option>${s[0]}</option>`).join("") + `</optgroup>`).join("");
+})();
+
+/* Ritual prices */
+$$("[data-price]").forEach(el => el.textContent = money(+el.dataset.price));
+
+/* Shade studio */
+(function(){
+  const stage = $("#stage"), box = $("#swatches"), nm = $("#shadeName"), ds = $("#shadeDesc"), book = $("#shadeBook"), skins = $("#skins");
+  box.innerHTML = SHADES.map((s,i)=>`<button class="sw" style="--a:${s.a};--b:${s.b}" data-i="${i}" aria-pressed="false" aria-label="${s.n}" title="${s.n}"></button>`).join("");
+  skins.insertAdjacentHTML("beforeend", SKINS.map((c,i)=>`<button class="skin" style="--c:${c}" data-c="${c}" aria-pressed="${i===1}" aria-label="Skin tone ${i+1}"></button>`).join(""));
+  function pick(i){
+    const s = SHADES[i];
+    stage.style.setProperty("--h1", s.a); stage.style.setProperty("--h2", s.b);
+    nm.textContent = s.n; ds.textContent = s.d;
+    book.href = waLink(`Hi ${CONFIG.brand}, I love the ${s.n} shade. Can I book a consultation for it?`);
+    $$(".sw").forEach((b,j)=>b.setAttribute("aria-pressed", j===i));
+  }
+  box.addEventListener("click", e => { const b = e.target.closest(".sw"); if (b) pick(+b.dataset.i); });
+  skins.addEventListener("click", e => { const b = e.target.closest(".skin"); if (!b) return; stage.style.setProperty("--skin", b.dataset.c); $$(".skin").forEach(x=>x.setAttribute("aria-pressed", x===b)); });
+  pick(1);
+})();
+
+/* Reviews */
+(function(){
+  const track = $("#track");
+  track.innerHTML = REVIEWS.map(r => `
+    <figure class="quote">
+      <span class="stars" aria-label="5 out of 5 stars">${svgUse("i-star").repeat(5)}</span>
+      <blockquote>“${r[2]}”</blockquote>
+      <figcaption class="who"><span class="av">${r[0].split(" ").map(x=>x[0]).join("")}</span><div><b>${r[0]}</b><span>${r[1]}</span></div></figcaption>
+    </figure>`).join("");
+  const step = () => (track.firstElementChild?.getBoundingClientRect().width || 400) + 22;
+  $("#next").onclick = () => { const end = track.scrollLeft + track.clientWidth >= track.scrollWidth - 10; track.scrollBy({left: end ? -track.scrollWidth : step(), behavior:"smooth"}); };
+  $("#prev").onclick = () => track.scrollBy({left:-step(), behavior:"smooth"});
+  let hover = false;
+  track.addEventListener("mouseenter", ()=>hover=true); track.addEventListener("mouseleave", ()=>hover=false);
+  track.addEventListener("touchstart", ()=>hover=true, {passive:true});
+  if (!reduce) setInterval(() => { if (!hover && document.hasFocus() && inView(track)) $("#next").click(); }, 5200);
+  function inView(el){ const r = el.getBoundingClientRect(); return r.top < innerHeight && r.bottom > 0; }
+})();
+
+/* Booking form -> WhatsApp */
+$("#bookForm").addEventListener("submit", e => {
+  e.preventDefault();
+  const f = e.target, v = n => f.elements[n].value.trim();
+  if (!v("name")) { f.elements.name.focus(); f.elements.name.style.borderColor = "#d33"; return; }
+  const lines = [`Hi ${CONFIG.brand}, I'd like to book an appointment.`,
+    `Name: ${v("name")}`, v("service") && `Service: ${v("service")}`,
+    v("date") && `Preferred date: ${v("date")}`, `Time of day: ${v("time")}`, v("note") && `Notes: ${v("note")}`].filter(Boolean);
+  window.open(waLink(lines.join("\n")), "_blank", "noopener");
+});
+
+/* Mobile menu */
+(function(){
+  const b = $("#burger"), s = $("#sheet");
+  const set = o => { b.setAttribute("aria-expanded", o); b.setAttribute("aria-label", o?"Close menu":"Open menu"); s.classList.toggle("open", o); s.setAttribute("aria-hidden", !o); document.documentElement.style.overflow = o ? "hidden" : ""; $("#nav").classList.toggle("menu", o); };
+  b.onclick = () => set(b.getAttribute("aria-expanded") !== "true");
+  s.addEventListener("click", e => { if (e.target.closest("a")) set(false); });
+  addEventListener("keydown", e => { if (e.key === "Escape") set(false); });
+})();
+
+/* Reveal on scroll */
+const io = new IntersectionObserver(es => es.forEach(en => { if (en.isIntersecting){ en.target.classList.add("in"); io.unobserve(en.target); } }), {threshold:.18, rootMargin:"0px 0px -6% 0px"});
+$$(".rv, [data-split]").forEach(el => { if (!el.closest(".hero h1") && el !== $(".hero h1")) io.observe(el); });
+
+/* Counters */
+const cio = new IntersectionObserver(es => es.forEach(en => {
+  if (!en.isIntersecting) return; cio.unobserve(en.target);
+  const el = en.target, to = +el.dataset.count, suf = el.dataset.suffix || "", t0 = performance.now(), dur = reduce ? 1 : 1800;
+  (function tick(t){ const p = Math.min(1,(t-t0)/dur), e = 1-Math.pow(1-p,4); el.textContent = Math.round(to*e).toLocaleString(CONFIG.locale) + suf; if (p<1) requestAnimationFrame(tick); })(t0);
+}), {threshold:.6});
+$$("[data-count]").forEach(el => cio.observe(el));
+
+/* Scroll-linked effects */
+(function(){
+  const nav = $("#nav"), bar = $("#progress"), strands = $("#strands"), wa = $("#wa"), steps = $("#steps"), stepEls = $$(".step");
+  let ticking = false;
+  function update(){
+    const y = scrollY, h = document.documentElement.scrollHeight - innerHeight;
+    bar.style.transform = `scaleX(${h>0 ? y/h : 0})`;
+    nav.classList.toggle("solid", y > 60 && !nav.classList.contains("menu"));
+    if (y < innerHeight*1.2 && !reduce) strands.style.transform = `translate3d(0,${y*.28}px,0) scale(${1+y/4000})`;
+    wa.classList.toggle("open", y > 500 && y < 900);
+    const r = steps.getBoundingClientRect(), p = Math.min(1, Math.max(0, (innerHeight*.62 - r.top) / r.height));
+    steps.style.setProperty("--p", p.toFixed(3));
+    stepEls.forEach(s => { const b = s.getBoundingClientRect(); s.classList.toggle("in", b.top < innerHeight*.62); });
+    ticking = false;
+  }
+  addEventListener("scroll", () => { if (!ticking){ ticking = true; requestAnimationFrame(update); } }, {passive:true});
+  addEventListener("resize", update);
+  update();
+  setTimeout(() => wa.classList.add("open"), 2600); setTimeout(() => { if (scrollY <= 500 || scrollY >= 900) wa.classList.remove("open"); }, 6500);
+})();
+</script>
+</body>
+</html>
