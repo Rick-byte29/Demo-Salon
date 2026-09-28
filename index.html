@@ -146,7 +146,7 @@ p{margin:0;max-width:62ch}
 /* shade studio */
 .studio{display:grid;grid-template-columns:.9fr 1.1fr;gap:clamp(30px,6vw,100px);align-items:center}
 .stage{position:relative;aspect-ratio:3/4;max-width:460px;width:100%;margin-inline:auto;border-radius:230px 230px 26px 26px;overflow:hidden;background:radial-gradient(circle at 50% 30%,rgba(255,255,255,.14),transparent 62%),linear-gradient(180deg,#3B2342,#22122A);box-shadow:inset 0 0 0 1px rgba(246,234,234,.14)}
-.stage canvas{position:absolute;inset:0;width:100%;height:100%;display:none;touch-action:none;cursor:crosshair}
+.stage canvas{position:absolute;inset:0;width:100%;height:100%;display:none}
 .stage video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scaleX(-1);display:none}
 .stage.has canvas{display:block}
 .stage.live video{display:block}
@@ -169,6 +169,13 @@ p{margin:0;max-width:62ch}
 .rng input{width:100%;accent-color:var(--accent)}
 .tool-btns{display:flex;gap:10px;flex-wrap:wrap}
 .btn:disabled{opacity:.6;cursor:wait;transform:none;box-shadow:none}
+.status{position:absolute;left:50%;top:16px;transform:translateX(-50%);display:flex;align-items:center;gap:10px;padding:10px 16px;border-radius:999px;background:rgba(27,15,32,.88);color:#F6EAEA;font-size:14px;white-space:nowrap;z-index:4}
+.status[hidden]{display:none}
+.status i{width:14px;height:14px;border-radius:50%;border:2px solid rgba(246,234,234,.3);border-top-color:#E38BB3;animation:spin .8s linear infinite}
+.status.done i{animation:none;border:0;background:#7be0a4}
+@keyframes spin{to{transform:rotate(360deg)}}
+.hint{margin:-8px 0 22px;padding:12px 16px;border-radius:14px;background:rgba(227,139,179,.14);color:#F6EAEA;font-size:15px}
+.hint[hidden]{display:none}
 .sr{position:absolute;width:1px;height:1px;opacity:0;overflow:hidden;pointer-events:none}
 .privacy{margin-top:16px;font-size:14px;color:var(--muted)}
 .studio-ui h2{margin-bottom:20px}
@@ -450,6 +457,7 @@ footer{padding:70px 0 40px}
           <label class="btn" for="fileCam" id="btnCam" tabindex="0" role="button">Take a selfie</label>
           <label class="btn ghost" for="fileUp" id="btnUp" tabindex="0" role="button">Upload a photo</label>
         </div>
+        <div class="status" id="status" role="status" aria-live="polite" hidden><i></i><span id="statusTxt"></span></div>
         <div class="ring" id="ring"></div>
         <div class="toast" id="toast" role="status" aria-live="polite"></div>
       </div>
@@ -459,6 +467,7 @@ footer{padding:70px 0 40px}
       </div>
       <div class="bar" id="barPhoto" hidden>
         <button class="btn ghost sm" type="button" id="btnCompare">Hold to see original</button>
+        <button class="btn ghost sm" type="button" id="btnRefine">Fine-tune edges</button>
         <button class="btn ghost sm" type="button" id="btnRetake">New photo</button>
         <button class="btn ghost sm" type="button" id="btnSave">Save image</button>
       </div>
@@ -467,16 +476,16 @@ footer{padding:70px 0 40px}
     </div>
     <div class="studio-ui">
       <h2 data-split>See your new colour on you.</h2>
-      <p class="sub rv">Add a selfie, pick a shade, and paint over your hair to preview it. It is a guide only, your artist matches the exact tone to your hair and skin.</p>
+      <p class="sub rv">Add a selfie and we find your hair automatically. Then just tap a shade to see it on you. It is a guide only, your artist matches the exact tone to your hair and skin.</p>
       <div class="swatches rv" id="swatches" role="group" aria-label="Hair shades"></div>
       <div class="shade-name" id="shadeName" aria-live="polite"></div>
       <p class="shade-desc" id="shadeDesc"></p>
+      <p class="hint" id="hint" hidden></p>
       <div class="tools" id="tools" hidden>
         <div class="seg" role="group" aria-label="Brush mode"><button type="button" class="on" data-m="paint">Paint hair</button><button type="button" data-m="erase">Erase</button></div>
         <label class="rng">Brush size<input type="range" id="bsize" min="14" max="100" value="48"></label>
         <label class="rng">Intensity<input type="range" id="inten" min="20" max="100" value="85"></label>
         <div class="tool-btns">
-          <button class="btn ghost sm" type="button" id="auto">Detect hair automatically</button>
           <button class="btn ghost sm" type="button" id="clearMask">Clear paint</button>
         </div>
       </div>
@@ -806,25 +815,31 @@ window.addEventListener("load", () => setTimeout(() => $(".hero h1").classList.a
 /* Ritual prices */
 $$("[data-price]").forEach(el => el.textContent = money(+el.dataset.price));
 
-/* Try-on studio: selfie + hair colour preview (all in the browser) */
+/* Try-on studio: selfie in, hair found automatically, tap a shade (all in the browser) */
 (function(){
   const W=810, H=1080;
   const stage=$("#stage"), cv=$("#cv"), ctx=cv.getContext("2d"), cam=$("#cam"), toastEl=$("#toast"), ring=$("#ring");
+  const statusEl=$("#status"), statusTxt=$("#statusTxt"), hint=$("#hint"), tools=$("#tools");
   cv.width=W; cv.height=H;
   const mk=()=>{const c=document.createElement("canvas");c.width=W;c.height=H;return c};
   const orig=mk(), mask=mk(), layer=mk();
   const octx=orig.getContext("2d"), mctx=mask.getContext("2d"), lctx=layer.getContext("2d");
-  let has=false, shade=SHADES[1], inten=.85, showOrig=false, mode="paint", brush=48, stream=null, painting=false, last=null, raf=0, tt=0;
+  let has=false, shade=null, inten=.85, showOrig=false, mode="paint", brush=48, stream=null, painting=false, last=null, raf=0, tt=0, runId=0;
 
   function toast(msg, ms=4200){ toastEl.textContent=msg; toastEl.classList.add("show"); clearTimeout(tt); tt=setTimeout(()=>toastEl.classList.remove("show"), ms); }
+  function setStatus(txt, done){ if(!txt){ statusEl.hidden=true; return; } statusEl.hidden=false; statusEl.classList.toggle("done",!!done); statusTxt.textContent=txt; }
+  function setHint(txt){ hint.hidden=!txt; hint.textContent=txt||""; }
 
   /* swatches */
   const box=$("#swatches"), nm=$("#shadeName"), ds=$("#shadeDesc"), book=$("#shadeBook");
   box.innerHTML=SHADES.map((s,i)=>`<button class="sw" style="--a:${s.a};--b:${s.b}" data-i="${i}" aria-pressed="false" aria-label="${s.n}" title="${s.n}"></button>`).join("");
+  nm.textContent="Pick a shade"; ds.textContent="Tap any colour and it appears on your hair.";
+  book.href=waLink(`Hi ${CONFIG.brand}, I'd like to book a colour consultation.`);
   function pick(i){
     shade=SHADES[i]; nm.textContent=shade.n; ds.textContent=shade.d;
     book.href=waLink(`Hi ${CONFIG.brand}, I'd love the ${shade.n} shade. Can I book a consultation for it?`);
     $$(".sw").forEach((b,j)=>b.setAttribute("aria-pressed", j===i));
+    if(has && hint.dataset.k==="pick") setHint("");
     render();
   }
   box.addEventListener("click", e=>{ const b=e.target.closest(".sw"); if(b) pick(+b.dataset.i); });
@@ -834,7 +849,7 @@ $$("[data-price]").forEach(el => el.textContent = money(+el.dataset.price));
     if(!has) return;
     ctx.globalCompositeOperation="source-over"; ctx.globalAlpha=1;
     ctx.clearRect(0,0,W,H); ctx.drawImage(orig,0,0);
-    if(showOrig) return;
+    if(showOrig||!shade) return;
     lctx.globalCompositeOperation="source-over"; lctx.clearRect(0,0,W,H);
     lctx.fillStyle=shade.c; lctx.fillRect(0,0,W,H);
     lctx.globalCompositeOperation="destination-in"; lctx.drawImage(mask,0,0);
@@ -846,7 +861,73 @@ $$("[data-price]").forEach(el => el.textContent = money(+el.dataset.price));
   }
   const queue=()=>{ if(!raf) raf=requestAnimationFrame(()=>{raf=0;render();}); };
 
-  /* photo in */
+  /* ---------- automatic hair detection (open-source MediaPipe hair model, runs in the browser) ---------- */
+  const withTimeout=(p,ms)=>Promise.race([p,new Promise((_,rej)=>setTimeout(()=>rej(new Error("timeout")),ms))]);
+  const V="https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14";
+  const MODEL="https://storage.googleapis.com/mediapipe-models/image_segmenter/hair_segmenter/float32/latest/hair_segmenter.tflite";
+  let segPromise=null, detectorFailed=false;
+  function getSegmenter(){
+    if(segPromise) return segPromise;
+    segPromise=(async()=>{
+      const {ImageSegmenter,FilesetResolver}=await withTimeout(import(V+"/vision_bundle.mjs"),20000);
+      const files=await withTimeout(FilesetResolver.forVisionTasks(V+"/wasm"),20000);
+      const opts=d=>({baseOptions:Object.assign({modelAssetPath:MODEL},d?{delegate:d}:{}),runningMode:"IMAGE",outputCategoryMask:true,outputConfidenceMasks:false});
+      try{ return await withTimeout(ImageSegmenter.createFromOptions(files,opts("GPU")),30000); }
+      catch(_){ return await withTimeout(ImageSegmenter.createFromOptions(files,opts()),30000); }
+    })();
+    segPromise.catch(()=>{ detectorFailed=true; });
+    return segPromise;
+  }
+  /* start warming the detector as soon as the section is near the screen */
+  new IntersectionObserver((es,o)=>{ if(es.some(e=>e.isIntersecting)){ o.disconnect(); getSegmenter().catch(()=>{}); } },{rootMargin:"800px 0px"}).observe($("#studio"));
+
+  function applyMask(res){
+    const m=res.categoryMask, arr=m.getAsUint8Array(), w=m.width, h=m.height;
+    let cnt=0; for(let i=0;i<arr.length;i++) if(arr[i]>0) cnt++;
+    let frac=cnt/arr.length, inv=false;
+    if(frac>.7){ inv=true; frac=1-frac; }
+    const t=document.createElement("canvas"); t.width=w; t.height=h;
+    const tc=t.getContext("2d"), id=tc.createImageData(w,h);
+    for(let i=0;i<arr.length;i++){ const on=(arr[i]>0)!==inv; const o=i*4; id.data[o]=id.data[o+1]=id.data[o+2]=255; id.data[o+3]=on?255:0; }
+    tc.putImageData(id,0,0);
+    mctx.clearRect(0,0,W,H);
+    if("filter" in mctx) mctx.filter="blur(2px)";
+    mctx.drawImage(t,0,0,W,H); mctx.filter="none";
+    if(res.close) res.close();
+    return frac;
+  }
+  function manualFallback(msg){
+    setStatus("");
+    tools.hidden=false;
+    hint.dataset.k="manual"; setHint(msg);
+  }
+  async function detect(){
+    const id=++runId;
+    setStatus("Finding your hair...");
+    try{
+      const seg=await getSegmenter();
+      if(id!==runId) return;
+      await new Promise(r=>setTimeout(r,30));
+      let frac=0;
+      seg.segment(orig,res=>{ frac=applyMask(res); });
+      if(id!==runId) return;
+      render();
+      if(frac<.01){
+        manualFallback("We could not clearly see your hair. Try a photo facing the camera in good light, or paint over your hair below.");
+        return;
+      }
+      setStatus("Hair found",true); setTimeout(()=>{ if(id===runId) setStatus(""); },2200);
+      hint.dataset.k="pick"; setHint(shade ? "" : "Your hair is detected. Now tap a shade to see it on you.");
+      if(shade) render();
+    }catch(err){
+      if(id!==runId) return;
+      manualFallback(detectorFailed
+        ? "Automatic hair detection could not load here. It works once the site is opened from its own web address. For now, drag over your hair to paint the colour on."
+        : "Something went wrong while finding your hair. Drag over your hair to paint the colour on.");
+    }
+  }
+
+  /* ---------- photo in ---------- */
   function drawCover(src,sw,sh,mirror){
     octx.clearRect(0,0,W,H);
     const k=Math.max(W/sw,H/sh), dw=sw*k, dh=sh*k, dx=(W-dw)/2, dy=(H-dh)/2;
@@ -856,8 +937,8 @@ $$("[data-price]").forEach(el => el.textContent = money(+el.dataset.price));
   function ready(){
     has=true; mctx.clearRect(0,0,W,H);
     stopCam(); stage.classList.remove("live"); stage.classList.add("has");
-    $("#barCam").hidden=true; $("#barPhoto").hidden=false; $("#tools").hidden=false;
-    render(); toast("Drag over your hair to paint the colour on.", 5200);
+    $("#barCam").hidden=true; $("#barPhoto").hidden=false; tools.hidden=true; setHint("");
+    render(); detect();
   }
   function loadFile(f){
     if(!f) return;
@@ -890,18 +971,19 @@ $$("[data-price]").forEach(el => el.textContent = money(+el.dataset.price));
   ["btnCam","btnUp"].forEach(id=>$("#"+id).addEventListener("keydown",e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); $("#"+id).click(); } }));
   $("#btnSnap").onclick=()=>{ if(!cam.videoWidth) return; drawCover(cam,cam.videoWidth,cam.videoHeight,true); ready(); };
   $("#btnCancel").onclick=()=>{ stopCam(); stage.classList.remove("live"); $("#barCam").hidden=true; };
-  $("#btnRetake").onclick=()=>{ has=false; stage.classList.remove("has"); $("#barPhoto").hidden=true; $("#tools").hidden=true; };
+  $("#btnRetake").onclick=()=>{ runId++; has=false; stage.classList.remove("has"); $("#barPhoto").hidden=true; tools.hidden=true; setHint(""); setStatus(""); };
+  $("#btnRefine").onclick=()=>{ tools.hidden=!tools.hidden; if(!tools.hidden) toast("Paint to add hair, Erase to remove colour from anywhere it spilled."); };
 
   /* compare + save */
   const cmp=$("#btnCompare");
   const holdOn=e=>{ e.preventDefault(); showOrig=true; render(); }, holdOff=()=>{ if(showOrig){ showOrig=false; render(); } };
   cmp.addEventListener("pointerdown",holdOn); ["pointerup","pointerleave","pointercancel","blur"].forEach(ev=>cmp.addEventListener(ev,holdOff));
   $("#btnSave").onclick=()=>{
-    try{ cv.toBlob(b=>{ const a=document.createElement("a"); a.href=URL.createObjectURL(b); a.download="my-new-colour-"+shade.n.toLowerCase().replace(/\s+/g,"-")+".jpg"; document.body.appendChild(a); a.click(); a.remove(); }, "image/jpeg", .92); }
+    try{ cv.toBlob(b=>{ const a=document.createElement("a"); a.href=URL.createObjectURL(b); a.download="my-new-colour"+(shade?"-"+shade.n.toLowerCase().replace(/\s+/g,"-"):"")+".jpg"; document.body.appendChild(a); a.click(); a.remove(); }, "image/jpeg", .92); }
     catch(_){ toast("Saving is not available here. Take a screenshot instead."); }
   };
 
-  /* brush */
+  /* brush (fine-tuning, or the fallback when detection is unavailable) */
   const pos=e=>{ const r=cv.getBoundingClientRect(); return {x:(e.clientX-r.left)*W/r.width, y:(e.clientY-r.top)*H/r.height, k:W/r.width}; };
   function dab(x,y,r){
     const g=mctx.createRadialGradient(x,y,r*.3,x,y,r);
@@ -921,54 +1003,19 @@ $$("[data-price]").forEach(el => el.textContent = money(+el.dataset.price));
     ring.style.display="block"; ring.style.width=ring.style.height=brush+"px";
     ring.style.left=(e.clientX-sr.left)+"px"; ring.style.top=(e.clientY-sr.top)+"px";
   }
-  cv.addEventListener("pointerdown",e=>{ if(!has) return; painting=true; last=null; cv.setPointerCapture(e.pointerId); moveRing(e); stroke(e); });
-  cv.addEventListener("pointermove",e=>{ if(!has) return; moveRing(e); if(painting) stroke(e); });
+  /* painting only when the fine-tune panel is open, so the photo never traps page scrolling */
+  cv.addEventListener("pointerdown",e=>{ if(!has||tools.hidden) return; painting=true; last=null; cv.setPointerCapture(e.pointerId); moveRing(e); stroke(e); });
+  cv.addEventListener("pointermove",e=>{ if(!has||tools.hidden) return; moveRing(e); if(painting) stroke(e); });
   const end=()=>{ painting=false; last=null; };
   cv.addEventListener("pointerup",end); cv.addEventListener("pointercancel",end);
   cv.addEventListener("pointerleave",()=>{ ring.style.display="none"; });
+  new MutationObserver(()=>{ cv.style.touchAction=tools.hidden?"auto":"none"; cv.style.cursor=tools.hidden?"default":"crosshair"; }).observe(tools,{attributes:true,attributeFilter:["hidden"]});
+  cv.style.touchAction="auto"; cv.style.cursor="default";
 
   $$(".seg button").forEach(b=>b.onclick=()=>{ mode=b.dataset.m; $$(".seg button").forEach(x=>x.classList.toggle("on",x===b)); });
   $("#bsize").oninput=e=>brush=+e.target.value;
   $("#inten").oninput=e=>{ inten=+e.target.value/100; render(); };
   $("#clearMask").onclick=()=>{ mctx.clearRect(0,0,W,H); render(); };
-
-  /* optional automatic hair detection (needs to load an open-source model, so it only works
-     on a normal web host such as GitHub Pages; the painting tool always works) */
-  const withTimeout=(p,ms)=>Promise.race([p,new Promise((_,rej)=>setTimeout(()=>rej(new Error("timeout")),ms))]);
-  $("#auto").onclick=async()=>{
-    if(!has) return;
-    const btn=$("#auto"), label=btn.textContent; btn.disabled=true; btn.textContent="Detecting hair...";
-    try{
-      const V="https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14";
-      const {ImageSegmenter,FilesetResolver}=await withTimeout(import(V+"/vision_bundle.mjs"),15000);
-      const files=await withTimeout(FilesetResolver.forVisionTasks(V+"/wasm"),15000);
-      const MODEL="https://storage.googleapis.com/mediapipe-models/image_segmenter/hair_segmenter/float32/latest/hair_segmenter.tflite";
-      const opts=d=>({baseOptions:Object.assign({modelAssetPath:MODEL},d?{delegate:d}:{}),runningMode:"IMAGE",outputCategoryMask:true,outputConfidenceMasks:false});
-      let seg; try{ seg=await withTimeout(ImageSegmenter.createFromOptions(files,opts("GPU")),25000); }
-      catch(_){ seg=await withTimeout(ImageSegmenter.createFromOptions(files,opts()),25000); }
-      let ok=false;
-      seg.segment(orig,res=>{
-        const m=res.categoryMask, arr=m.getAsUint8Array(), w=m.width, h=m.height;
-        let cnt=0; for(let i=0;i<arr.length;i++) if(arr[i]>0) cnt++;
-        const inv = cnt/arr.length>.7;
-        const t=document.createElement("canvas"); t.width=w; t.height=h;
-        const tc=t.getContext("2d"), id=tc.createImageData(w,h);
-        for(let i=0;i<arr.length;i++){ const on=(arr[i]>0)!==inv; id.data[i*4]=id.data[i*4+1]=id.data[i*4+2]=255; id.data[i*4+3]=on?255:0; }
-        tc.putImageData(id,0,0);
-        mctx.clearRect(0,0,W,H);
-        if("filter" in mctx) mctx.filter="blur(1.5px)";
-        mctx.drawImage(t,0,0,W,H); mctx.filter="none";
-        ok = cnt>0; if(res.close) res.close();
-      });
-      if(seg.close) seg.close();
-      render();
-      toast(ok ? "Hair detected. Use Paint or Erase to fine-tune the edges." : "No hair found. Try painting over your hair instead.");
-    }catch(err){
-      toast("Auto-detect is not available in this preview. Paint over your hair instead, it only takes a few seconds.", 6000);
-    }finally{ btn.disabled=false; btn.textContent=label; }
-  };
-
-  pick(1);
 })();
 
 /* Reviews */
