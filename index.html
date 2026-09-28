@@ -42,6 +42,7 @@ html{scroll-behavior:smooth;scroll-padding-top:calc(env(safe-area-inset-top,0px)
 body{margin:0;background:var(--bg);color:var(--ink);font:400 17px/1.65 var(--sans);overflow-x:clip;-webkit-font-smoothing:antialiased}
 img,svg{max-width:100%}
 a{color:inherit}
+a[data-go]{cursor:pointer}
 h1,h2,h3,h4{font-family:var(--serif);font-weight:400;line-height:1.06;letter-spacing:-.012em;margin:0}
 h2{font-size:clamp(34px,5.4vw,70px)}
 h3{font-size:clamp(22px,2.4vw,30px)}
@@ -144,9 +145,32 @@ p{margin:0;max-width:62ch}
 
 /* shade studio */
 .studio{display:grid;grid-template-columns:.9fr 1.1fr;gap:clamp(30px,6vw,100px);align-items:center}
-.stage{position:relative;aspect-ratio:400/480;max-width:460px;width:100%;margin-inline:auto;border-radius:200px 200px 24px 24px;overflow:hidden;background:radial-gradient(circle at 50% 30%,rgba(255,255,255,.14),transparent 62%),linear-gradient(180deg,#3B2342,#22122A);box-shadow:inset 0 0 0 1px rgba(246,234,234,.14)}
-.stage svg{width:100%;height:100%;display:block}
-.stage .hair{fill:url(#hg)}
+.stage{position:relative;aspect-ratio:3/4;max-width:460px;width:100%;margin-inline:auto;border-radius:230px 230px 26px 26px;overflow:hidden;background:radial-gradient(circle at 50% 30%,rgba(255,255,255,.14),transparent 62%),linear-gradient(180deg,#3B2342,#22122A);box-shadow:inset 0 0 0 1px rgba(246,234,234,.14)}
+.stage canvas{position:absolute;inset:0;width:100%;height:100%;display:none;touch-action:none;cursor:crosshair}
+.stage video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scaleX(-1);display:none}
+.stage.has canvas{display:block}
+.stage.live video{display:block}
+.stage.has .empty,.stage.live .empty{display:none}
+.empty{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:40px 28px 28px;text-align:center}
+.empty svg{width:130px;height:auto;stroke:rgba(246,234,234,.5);fill:none;stroke-width:1.5;stroke-dasharray:5 6;margin-bottom:6px}
+.empty h3{font-size:28px}
+.empty p{font-size:15px;color:var(--muted);margin-bottom:6px}
+.empty .btn{width:100%;max-width:240px}
+.ring{position:absolute;border:2px solid #fff;border-radius:50%;pointer-events:none;transform:translate(-50%,-50%);mix-blend-mode:difference;display:none;z-index:3}
+.toast{position:absolute;left:14px;right:14px;bottom:14px;padding:12px 16px;border-radius:14px;background:rgba(27,15,32,.88);color:#F6EAEA;font-size:14.5px;line-height:1.4;text-align:center;opacity:0;transform:translateY(10px);transition:opacity .3s,transform .3s;pointer-events:none;z-index:4}
+.toast.show{opacity:1;transform:none}
+.bar{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:18px}
+.bar[hidden],.tools[hidden]{display:none}
+.tools{display:grid;gap:16px;margin:4px 0 28px;padding:20px;border:1px solid var(--line);border-radius:20px;background:var(--card)}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;padding:4px;width:max-content}
+.seg button{border:0;background:transparent;color:var(--ink);padding:9px 18px;border-radius:999px;font:400 15px var(--sans);cursor:pointer}
+.seg button.on{background:var(--ink);color:var(--bg)}
+.rng{display:grid;grid-template-columns:90px 1fr;align-items:center;gap:14px;font-size:15px;color:var(--muted)}
+.rng input{width:100%;accent-color:var(--accent)}
+.tool-btns{display:flex;gap:10px;flex-wrap:wrap}
+.btn:disabled{opacity:.6;cursor:wait;transform:none;box-shadow:none}
+.sr{position:absolute;width:1px;height:1px;opacity:0;overflow:hidden;pointer-events:none}
+.privacy{margin-top:16px;font-size:14px;color:var(--muted)}
 .studio-ui h2{margin-bottom:20px}
 .studio-ui .sub{color:var(--muted);margin-bottom:28px}
 .swatches{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:26px}
@@ -155,9 +179,6 @@ p{margin:0;max-width:62ch}
 .sw[aria-pressed="true"]{box-shadow:0 0 0 3px var(--bg),0 0 0 5px var(--accent);transform:scale(1.04)}
 .shade-name{font-family:var(--serif);font-size:clamp(30px,3.6vw,46px);margin-bottom:6px;min-height:1.1em}
 .shade-desc{color:var(--muted);min-height:3.4em;margin-bottom:22px}
-.skins{display:flex;align-items:center;gap:10px;margin-bottom:28px;font-size:15px;color:var(--muted);flex-wrap:wrap}
-.skin{width:28px;height:28px;border-radius:50%;border:0;cursor:pointer;background:var(--c);box-shadow:0 0 0 1px var(--line)}
-.skin[aria-pressed="true"]{box-shadow:0 0 0 2px var(--bg),0 0 0 4px var(--accent)}
 
 /* rituals */
 .rituals{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;align-items:stretch}
@@ -326,7 +347,7 @@ footer{padding:70px 0 40px}
     </a>
     <nav class="links" aria-label="Primary">
       <a href="#services">Services</a>
-      <a href="#studio">Shade studio</a>
+      <a href="#studio">Try-on</a>
       <a href="#rituals">Rituals</a>
       <a href="#team">Artists</a>
       <a href="#reviews">Reviews</a>
@@ -341,7 +362,7 @@ footer{padding:70px 0 40px}
 
 <div class="sheet" id="sheet" aria-hidden="true">
   <a class="big" href="#services">Services</a>
-  <a class="big" href="#studio">Shade studio</a>
+  <a class="big" href="#studio">Try-on</a>
   <a class="big" href="#rituals">Rituals</a>
   <a class="big" href="#team">Artists</a>
   <a class="big" href="#reviews">Reviews</a>
@@ -418,41 +439,49 @@ footer{padding:70px 0 40px}
 <!-- SHADE STUDIO -->
 <section class="sec dk" id="studio">
   <div class="wrap studio">
-    <div class="stage rv" data-rv="scale" id="stage" style="--h1:#2a1a14;--h2:#4a2d22;--skin:#e2b48f">
-      <svg viewBox="0 0 400 480" role="img" aria-label="Portrait showing the selected hair shade">
-        <defs>
-          <linearGradient id="hg" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" style="stop-color:var(--h1)"/>
-            <stop offset="1" style="stop-color:var(--h2)"/>
-          </linearGradient>
-          <linearGradient id="shine" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stop-color="#fff" stop-opacity=".38"/><stop offset="1" stop-color="#fff" stop-opacity="0"/>
-          </linearGradient>
-        </defs>
-        <path d="M40 480C52 418 122 386 200 386s148 32 160 94z" fill="#8A2F5D"/>
-        <path d="M168 310h64v86c-20 14-44 14-64 0z" style="fill:var(--skin)"/>
-        <path d="M168 335h64v20c-20 10-44 10-64 0z" fill="#000" opacity=".12"/>
-        <path class="hair" d="M124 228C100 300 96 385 76 452l78-6c-4-70 2-150-4-218z"/>
-        <path class="hair" d="M276 228c24 72 28 157 48 224l-78-6c4-70-2-150 4-218z"/>
-        <path class="hair" d="M116 238C90 108 148 58 200 58s110 50 84 180z"/>
-        <ellipse cx="200" cy="232" rx="80" ry="102" style="fill:var(--skin)"/>
-        <ellipse cx="172" cy="236" rx="7" ry="4" fill="#2B1830" opacity=".75"/>
-        <ellipse cx="228" cy="236" rx="7" ry="4" fill="#2B1830" opacity=".75"/>
-        <path d="M182 290q18 12 36 0" fill="none" stroke="#8A2F5D" stroke-width="3.5" stroke-linecap="round"/>
-        <path class="hair" d="M118 240C108 150 150 96 206 94c-40 24-58 66-62 126-6-18-16-16-26 20z"/>
-        <path class="hair" d="M282 240c10-90-32-144-88-146 36 24 58 64 64 126 6-18 16-16 24 20z"/>
-        <path d="M150 90c30-20 70-18 96 4" fill="none" stroke="url(#shine)" stroke-width="10" stroke-linecap="round" opacity=".8"/>
-        <path d="M104 320c-6 40-10 80-20 118" fill="none" stroke="url(#shine)" stroke-width="7" stroke-linecap="round" opacity=".55"/>
-      </svg>
+    <div class="rv" data-rv="scale">
+      <div class="stage" id="stage">
+        <video id="cam" playsinline muted></video>
+        <canvas id="cv" aria-label="Your photo with the selected hair colour"></canvas>
+        <div class="empty" id="empty">
+          <svg viewBox="0 0 120 130" aria-hidden="true"><ellipse cx="60" cy="52" rx="28" ry="34"/><path d="M28 60C20 20 40 6 60 6s40 14 32 54"/><path d="M8 128c4-32 26-42 52-42s48 10 52 42"/></svg>
+          <h3>Try it on you</h3>
+          <p>Take a selfie or upload a photo, then pick a colour.</p>
+          <label class="btn" for="fileCam" id="btnCam" tabindex="0" role="button">Take a selfie</label>
+          <label class="btn ghost" for="fileUp" id="btnUp" tabindex="0" role="button">Upload a photo</label>
+        </div>
+        <div class="ring" id="ring"></div>
+        <div class="toast" id="toast" role="status" aria-live="polite"></div>
+      </div>
+      <div class="bar" id="barCam" hidden>
+        <button class="btn" type="button" id="btnSnap">Capture photo</button>
+        <button class="btn ghost" type="button" id="btnCancel">Cancel</button>
+      </div>
+      <div class="bar" id="barPhoto" hidden>
+        <button class="btn ghost sm" type="button" id="btnCompare">Hold to see original</button>
+        <button class="btn ghost sm" type="button" id="btnRetake">New photo</button>
+        <button class="btn ghost sm" type="button" id="btnSave">Save image</button>
+      </div>
+      <input type="file" id="fileUp" class="sr" accept="image/*">
+      <input type="file" id="fileCam" class="sr" accept="image/*" capture="user">
     </div>
     <div class="studio-ui">
-      <h2 data-split>Try a shade before you book.</h2>
-      <p class="sub rv">Tap a colour to preview it. It is a guide only, your artist matches the exact tone to your skin and starting level.</p>
+      <h2 data-split>See your new colour on you.</h2>
+      <p class="sub rv">Add a selfie, pick a shade, and paint over your hair to preview it. It is a guide only, your artist matches the exact tone to your hair and skin.</p>
       <div class="swatches rv" id="swatches" role="group" aria-label="Hair shades"></div>
       <div class="shade-name" id="shadeName" aria-live="polite"></div>
       <p class="shade-desc" id="shadeDesc"></p>
-      <div class="skins" id="skins" role="group" aria-label="Skin tone preview"><span>Skin tone</span></div>
+      <div class="tools" id="tools" hidden>
+        <div class="seg" role="group" aria-label="Brush mode"><button type="button" class="on" data-m="paint">Paint hair</button><button type="button" data-m="erase">Erase</button></div>
+        <label class="rng">Brush size<input type="range" id="bsize" min="14" max="100" value="48"></label>
+        <label class="rng">Intensity<input type="range" id="inten" min="20" max="100" value="85"></label>
+        <div class="tool-btns">
+          <button class="btn ghost sm" type="button" id="auto">Detect hair automatically</button>
+          <button class="btn ghost sm" type="button" id="clearMask">Clear paint</button>
+        </div>
+      </div>
       <a class="btn" id="shadeBook" href="#" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><use href="#i-wa"/></svg>Ask for this shade</a>
+      <p class="privacy">Your photo stays on your device. It is never uploaded or stored.</p>
     </div>
   </div>
 </section>
@@ -613,7 +642,7 @@ footer{padding:70px 0 40px}
         <a class="logo" href="#top">Aurelle</a>
         <p>Hair and beauty atelier. Colour, cut, bridal and skin.</p>
       </div>
-      <nav aria-label="Footer"><a href="#services">Services</a><a href="#studio">Shade studio</a><a href="#rituals">Rituals</a><a href="#team">Artists</a></nav>
+      <nav aria-label="Footer"><a href="#services">Services</a><a href="#studio">Try-on</a><a href="#rituals">Rituals</a><a href="#team">Artists</a></nav>
       <nav aria-label="Footer more"><a href="#reviews">Reviews</a><a href="#faq">FAQ</a><a href="#visit">Book a visit</a></nav>
     </div>
     <div class="legal"><span>&copy; 2026 Aurelle Hair &amp; Beauty Atelier</span><span>Website concept by Your Studio Name</span></div>
@@ -636,8 +665,8 @@ footer{padding:70px 0 40px}
 /* ============ EASY CUSTOMISATION ============ */
 const CONFIG = {
   brand: "Aurelle",
-  phone: "919999999999",          // WhatsApp number, country code first, no + or spaces
-  phoneDisplay: "+91 99999 99999",
+  phone: "919101035255",          // WhatsApp number, country code first, no + or spaces
+  phoneDisplay: "+91 91010 35255",
   currency: "₹",
   locale: "en-IN"
 };
@@ -677,16 +706,15 @@ const SERVICES = {
 };
 
 const SHADES = [
-  {n:"Espresso",d:"Deep, glossy brown with a cool undertone. Timeless and low maintenance.",a:"#2a1a14",b:"#4a2d22"},
-  {n:"Chestnut",d:"Warm mid-brown with natural movement. Flatters almost every skin tone.",a:"#5a3320",b:"#8a5334"},
-  {n:"Honey blonde",d:"Soft golden dimension that catches the light. Hand-painted balayage works best.",a:"#c99a4b",b:"#ecc987"},
-  {n:"Copper",d:"Confident, glowing red-orange. A statement that looks rich in daylight.",a:"#9c4020",b:"#d9743a"},
-  {n:"Rosewood",d:"Muted burgundy with a rosy sheen. Romantic and quietly bold.",a:"#6d2a3f",b:"#a8506a"},
-  {n:"Ash platinum",d:"Cool, icy and luminous. Needs a gentle multi-step lift and bond care.",a:"#b9b6b8",b:"#ecebec"},
-  {n:"Plum",d:"Deep violet-brown that flashes colour in the sun. Great for dark bases.",a:"#3d1a4d",b:"#7a3a8c"},
-  {n:"Midnight blue",d:"Near-black with a blue glint. Subtle by day, striking at night.",a:"#0f1c3a",b:"#2c4a86"}
+  {n:"Espresso",d:"Deep, glossy brown with a cool undertone. Timeless and low maintenance.",a:"#2a1a14",b:"#4a2d22",c:"#3a2218",lift:0,deep:.55},
+  {n:"Chestnut",d:"Warm mid-brown with natural movement. Flatters almost every skin tone.",a:"#5a3320",b:"#8a5334",c:"#7a4a2c",lift:0,deep:.3},
+  {n:"Honey blonde",d:"Soft golden dimension that catches the light. Hand-painted balayage works best.",a:"#c99a4b",b:"#ecc987",c:"#d9aa5a",lift:.4,deep:0},
+  {n:"Copper",d:"Confident, glowing red-orange. A statement that looks rich in daylight.",a:"#9c4020",b:"#d9743a",c:"#c4622d",lift:.14,deep:.1},
+  {n:"Rosewood",d:"Muted burgundy with a rosy sheen. Romantic and quietly bold.",a:"#6d2a3f",b:"#a8506a",c:"#9a3f5c",lift:0,deep:.22},
+  {n:"Ash platinum",d:"Cool, icy and luminous. Needs a gentle multi-step lift and bond care.",a:"#b9b6b8",b:"#ecebec",c:"#d3d1d4",lift:.5,deep:0},
+  {n:"Plum",d:"Deep violet-brown that flashes colour in the sun. Great for dark bases.",a:"#3d1a4d",b:"#7a3a8c",c:"#6a2f80",lift:0,deep:.32},
+  {n:"Midnight blue",d:"Near-black with a blue glint. Subtle by day, striking at night.",a:"#0f1c3a",b:"#2c4a86",c:"#1f3670",lift:0,deep:.55}
 ];
-const SKINS = ["#f3d2b8","#e2b48f","#c58d64","#8d5a3b","#5b3a26"];
 
 const REVIEWS = [
   ["Riya Sen","Balayage","I walked in with a screenshot and a lot of doubt. Simran explained exactly what would work on my dark hair, and three hours later I could not stop touching it. Every colleague has asked for her name."],
@@ -778,20 +806,168 @@ window.addEventListener("load", () => setTimeout(() => $(".hero h1").classList.a
 /* Ritual prices */
 $$("[data-price]").forEach(el => el.textContent = money(+el.dataset.price));
 
-/* Shade studio */
+/* Try-on studio: selfie + hair colour preview (all in the browser) */
 (function(){
-  const stage = $("#stage"), box = $("#swatches"), nm = $("#shadeName"), ds = $("#shadeDesc"), book = $("#shadeBook"), skins = $("#skins");
-  box.innerHTML = SHADES.map((s,i)=>`<button class="sw" style="--a:${s.a};--b:${s.b}" data-i="${i}" aria-pressed="false" aria-label="${s.n}" title="${s.n}"></button>`).join("");
-  skins.insertAdjacentHTML("beforeend", SKINS.map((c,i)=>`<button class="skin" style="--c:${c}" data-c="${c}" aria-pressed="${i===1}" aria-label="Skin tone ${i+1}"></button>`).join(""));
+  const W=810, H=1080;
+  const stage=$("#stage"), cv=$("#cv"), ctx=cv.getContext("2d"), cam=$("#cam"), toastEl=$("#toast"), ring=$("#ring");
+  cv.width=W; cv.height=H;
+  const mk=()=>{const c=document.createElement("canvas");c.width=W;c.height=H;return c};
+  const orig=mk(), mask=mk(), layer=mk();
+  const octx=orig.getContext("2d"), mctx=mask.getContext("2d"), lctx=layer.getContext("2d");
+  let has=false, shade=SHADES[1], inten=.85, showOrig=false, mode="paint", brush=48, stream=null, painting=false, last=null, raf=0, tt=0;
+
+  function toast(msg, ms=4200){ toastEl.textContent=msg; toastEl.classList.add("show"); clearTimeout(tt); tt=setTimeout(()=>toastEl.classList.remove("show"), ms); }
+
+  /* swatches */
+  const box=$("#swatches"), nm=$("#shadeName"), ds=$("#shadeDesc"), book=$("#shadeBook");
+  box.innerHTML=SHADES.map((s,i)=>`<button class="sw" style="--a:${s.a};--b:${s.b}" data-i="${i}" aria-pressed="false" aria-label="${s.n}" title="${s.n}"></button>`).join("");
   function pick(i){
-    const s = SHADES[i];
-    stage.style.setProperty("--h1", s.a); stage.style.setProperty("--h2", s.b);
-    nm.textContent = s.n; ds.textContent = s.d;
-    book.href = waLink(`Hi ${CONFIG.brand}, I love the ${s.n} shade. Can I book a consultation for it?`);
+    shade=SHADES[i]; nm.textContent=shade.n; ds.textContent=shade.d;
+    book.href=waLink(`Hi ${CONFIG.brand}, I'd love the ${shade.n} shade. Can I book a consultation for it?`);
     $$(".sw").forEach((b,j)=>b.setAttribute("aria-pressed", j===i));
+    render();
   }
-  box.addEventListener("click", e => { const b = e.target.closest(".sw"); if (b) pick(+b.dataset.i); });
-  skins.addEventListener("click", e => { const b = e.target.closest(".skin"); if (!b) return; stage.style.setProperty("--skin", b.dataset.c); $$(".skin").forEach(x=>x.setAttribute("aria-pressed", x===b)); });
+  box.addEventListener("click", e=>{ const b=e.target.closest(".sw"); if(b) pick(+b.dataset.i); });
+
+  /* render: original + colour blended through the hair mask */
+  function render(){
+    if(!has) return;
+    ctx.globalCompositeOperation="source-over"; ctx.globalAlpha=1;
+    ctx.clearRect(0,0,W,H); ctx.drawImage(orig,0,0);
+    if(showOrig) return;
+    lctx.globalCompositeOperation="source-over"; lctx.clearRect(0,0,W,H);
+    lctx.fillStyle=shade.c; lctx.fillRect(0,0,W,H);
+    lctx.globalCompositeOperation="destination-in"; lctx.drawImage(mask,0,0);
+    lctx.globalCompositeOperation="source-over";
+    ctx.globalAlpha=inten; ctx.globalCompositeOperation="color"; ctx.drawImage(layer,0,0);
+    if(shade.lift){ ctx.globalAlpha=inten*shade.lift; ctx.globalCompositeOperation="screen"; ctx.drawImage(layer,0,0); }
+    if(shade.deep){ ctx.globalAlpha=inten*shade.deep; ctx.globalCompositeOperation="multiply"; ctx.drawImage(layer,0,0); }
+    ctx.globalAlpha=1; ctx.globalCompositeOperation="source-over";
+  }
+  const queue=()=>{ if(!raf) raf=requestAnimationFrame(()=>{raf=0;render();}); };
+
+  /* photo in */
+  function drawCover(src,sw,sh,mirror){
+    octx.clearRect(0,0,W,H);
+    const k=Math.max(W/sw,H/sh), dw=sw*k, dh=sh*k, dx=(W-dw)/2, dy=(H-dh)/2;
+    octx.save(); if(mirror){ octx.translate(W,0); octx.scale(-1,1); }
+    octx.drawImage(src,dx,dy,dw,dh); octx.restore();
+  }
+  function ready(){
+    has=true; mctx.clearRect(0,0,W,H);
+    stopCam(); stage.classList.remove("live"); stage.classList.add("has");
+    $("#barCam").hidden=true; $("#barPhoto").hidden=false; $("#tools").hidden=false;
+    render(); toast("Drag over your hair to paint the colour on.", 5200);
+  }
+  function loadFile(f){
+    if(!f) return;
+    const url=URL.createObjectURL(f), img=new Image();
+    img.onload=()=>{ drawCover(img,img.naturalWidth,img.naturalHeight,false); URL.revokeObjectURL(url); ready(); };
+    img.onerror=()=>toast("That file could not be opened. Try a JPG or PNG photo.");
+    img.src=url;
+  }
+  $("#fileUp").onchange=e=>{ loadFile(e.target.files[0]); e.target.value=""; };
+  $("#fileCam").onchange=e=>{ loadFile(e.target.files[0]); e.target.value=""; };
+
+  /* camera */
+  function stopCam(){ if(stream){ stream.getTracks().forEach(t=>t.stop()); stream=null; } cam.srcObject=null; }
+  async function startCam(){
+    if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){ toast("Camera is not available here. Use Upload a photo instead."); return; }
+    try{
+      stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:"user",width:{ideal:1280},height:{ideal:1280}},audio:false});
+      cam.srcObject=stream; await cam.play();
+      stage.classList.remove("has"); stage.classList.add("live");
+      $("#barCam").hidden=false; $("#barPhoto").hidden=true;
+    }catch(err){
+      stopCam(); toast("Camera access was blocked. Allow the camera in your browser, or use Upload a photo.", 6500);
+    }
+  }
+  /* Phones: the label opens the native front camera. Computers: use the webcam live view. */
+  $("#btnCam").addEventListener("click",e=>{
+    if(matchMedia("(pointer: coarse)").matches) return;
+    e.preventDefault(); startCam();
+  });
+  ["btnCam","btnUp"].forEach(id=>$("#"+id).addEventListener("keydown",e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); $("#"+id).click(); } }));
+  $("#btnSnap").onclick=()=>{ if(!cam.videoWidth) return; drawCover(cam,cam.videoWidth,cam.videoHeight,true); ready(); };
+  $("#btnCancel").onclick=()=>{ stopCam(); stage.classList.remove("live"); $("#barCam").hidden=true; };
+  $("#btnRetake").onclick=()=>{ has=false; stage.classList.remove("has"); $("#barPhoto").hidden=true; $("#tools").hidden=true; };
+
+  /* compare + save */
+  const cmp=$("#btnCompare");
+  const holdOn=e=>{ e.preventDefault(); showOrig=true; render(); }, holdOff=()=>{ if(showOrig){ showOrig=false; render(); } };
+  cmp.addEventListener("pointerdown",holdOn); ["pointerup","pointerleave","pointercancel","blur"].forEach(ev=>cmp.addEventListener(ev,holdOff));
+  $("#btnSave").onclick=()=>{
+    try{ cv.toBlob(b=>{ const a=document.createElement("a"); a.href=URL.createObjectURL(b); a.download="my-new-colour-"+shade.n.toLowerCase().replace(/\s+/g,"-")+".jpg"; document.body.appendChild(a); a.click(); a.remove(); }, "image/jpeg", .92); }
+    catch(_){ toast("Saving is not available here. Take a screenshot instead."); }
+  };
+
+  /* brush */
+  const pos=e=>{ const r=cv.getBoundingClientRect(); return {x:(e.clientX-r.left)*W/r.width, y:(e.clientY-r.top)*H/r.height, k:W/r.width}; };
+  function dab(x,y,r){
+    const g=mctx.createRadialGradient(x,y,r*.3,x,y,r);
+    g.addColorStop(0,"rgba(255,255,255,1)"); g.addColorStop(1,"rgba(255,255,255,0)");
+    mctx.globalCompositeOperation = mode==="paint" ? "source-over" : "destination-out";
+    mctx.fillStyle=g; mctx.beginPath(); mctx.arc(x,y,r,0,Math.PI*2); mctx.fill();
+    mctx.globalCompositeOperation="source-over";
+  }
+  function stroke(e){
+    const p=pos(e), r=brush*p.k/2;
+    if(last){ const dx=p.x-last.x, dy=p.y-last.y, dist=Math.hypot(dx,dy), step=Math.max(2,r*.3), n=Math.ceil(dist/step); for(let i=1;i<=n;i++) dab(last.x+dx*i/n, last.y+dy*i/n, r); }
+    else dab(p.x,p.y,r);
+    last=p; queue();
+  }
+  function moveRing(e){
+    const sr=stage.getBoundingClientRect();
+    ring.style.display="block"; ring.style.width=ring.style.height=brush+"px";
+    ring.style.left=(e.clientX-sr.left)+"px"; ring.style.top=(e.clientY-sr.top)+"px";
+  }
+  cv.addEventListener("pointerdown",e=>{ if(!has) return; painting=true; last=null; cv.setPointerCapture(e.pointerId); moveRing(e); stroke(e); });
+  cv.addEventListener("pointermove",e=>{ if(!has) return; moveRing(e); if(painting) stroke(e); });
+  const end=()=>{ painting=false; last=null; };
+  cv.addEventListener("pointerup",end); cv.addEventListener("pointercancel",end);
+  cv.addEventListener("pointerleave",()=>{ ring.style.display="none"; });
+
+  $$(".seg button").forEach(b=>b.onclick=()=>{ mode=b.dataset.m; $$(".seg button").forEach(x=>x.classList.toggle("on",x===b)); });
+  $("#bsize").oninput=e=>brush=+e.target.value;
+  $("#inten").oninput=e=>{ inten=+e.target.value/100; render(); };
+  $("#clearMask").onclick=()=>{ mctx.clearRect(0,0,W,H); render(); };
+
+  /* optional automatic hair detection (needs to load an open-source model, so it only works
+     on a normal web host such as GitHub Pages; the painting tool always works) */
+  const withTimeout=(p,ms)=>Promise.race([p,new Promise((_,rej)=>setTimeout(()=>rej(new Error("timeout")),ms))]);
+  $("#auto").onclick=async()=>{
+    if(!has) return;
+    const btn=$("#auto"), label=btn.textContent; btn.disabled=true; btn.textContent="Detecting hair...";
+    try{
+      const V="https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14";
+      const {ImageSegmenter,FilesetResolver}=await withTimeout(import(V+"/vision_bundle.mjs"),15000);
+      const files=await withTimeout(FilesetResolver.forVisionTasks(V+"/wasm"),15000);
+      const MODEL="https://storage.googleapis.com/mediapipe-models/image_segmenter/hair_segmenter/float32/latest/hair_segmenter.tflite";
+      const opts=d=>({baseOptions:Object.assign({modelAssetPath:MODEL},d?{delegate:d}:{}),runningMode:"IMAGE",outputCategoryMask:true,outputConfidenceMasks:false});
+      let seg; try{ seg=await withTimeout(ImageSegmenter.createFromOptions(files,opts("GPU")),25000); }
+      catch(_){ seg=await withTimeout(ImageSegmenter.createFromOptions(files,opts()),25000); }
+      let ok=false;
+      seg.segment(orig,res=>{
+        const m=res.categoryMask, arr=m.getAsUint8Array(), w=m.width, h=m.height;
+        let cnt=0; for(let i=0;i<arr.length;i++) if(arr[i]>0) cnt++;
+        const inv = cnt/arr.length>.7;
+        const t=document.createElement("canvas"); t.width=w; t.height=h;
+        const tc=t.getContext("2d"), id=tc.createImageData(w,h);
+        for(let i=0;i<arr.length;i++){ const on=(arr[i]>0)!==inv; id.data[i*4]=id.data[i*4+1]=id.data[i*4+2]=255; id.data[i*4+3]=on?255:0; }
+        tc.putImageData(id,0,0);
+        mctx.clearRect(0,0,W,H);
+        if("filter" in mctx) mctx.filter="blur(1.5px)";
+        mctx.drawImage(t,0,0,W,H); mctx.filter="none";
+        ok = cnt>0; if(res.close) res.close();
+      });
+      if(seg.close) seg.close();
+      render();
+      toast(ok ? "Hair detected. Use Paint or Erase to fine-tune the edges." : "No hair found. Try painting over your hair instead.");
+    }catch(err){
+      toast("Auto-detect is not available in this preview. Paint over your hair instead, it only takes a few seconds.", 6000);
+    }finally{ btn.disabled=false; btn.textContent=label; }
+  };
+
   pick(1);
 })();
 
@@ -823,6 +999,29 @@ $("#bookForm").addEventListener("submit", e => {
     `Name: ${v("name")}`, v("service") && `Service: ${v("service")}`,
     v("date") && `Preferred date: ${v("date")}`, `Time of day: ${v("time")}`, v("note") && `Notes: ${v("note")}`].filter(Boolean);
   window.open(waLink(lines.join("\n")), "_blank", "noopener");
+});
+
+/* In-page navigation without relying on URL hashes (hash links can bounce out of the hosted preview) */
+$$('a[href^="#"]:not([data-wa])').forEach(a => {
+  const id = a.getAttribute("href").slice(1);
+  if (!id) return;
+  a.dataset.go = id; a.removeAttribute("href"); a.setAttribute("role","link"); a.tabIndex = 0;
+});
+function goTo(id){
+  const t = document.getElementById(id); if (!t) return;
+  document.documentElement.style.overflow = "";
+  const off = parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop) || 70;
+  const y = id === "top" ? 0 : t.getBoundingClientRect().top + scrollY - off + 1;
+  window.scrollTo({top: y, behavior: reduce ? "auto" : "smooth"});
+}
+document.addEventListener("click", e => {
+  const a = e.target.closest("a[data-go]"); if (!a) return;
+  e.preventDefault(); goTo(a.dataset.go);
+}, true);
+document.addEventListener("keydown", e => {
+  if (e.key !== "Enter") return;
+  const a = e.target.closest && e.target.closest("a[data-go]"); if (!a) return;
+  e.preventDefault(); goTo(a.dataset.go);
 });
 
 /* Mobile menu */
